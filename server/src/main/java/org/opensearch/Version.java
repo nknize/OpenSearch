@@ -353,7 +353,8 @@ public class Version implements Comparable<Version>, ToXContentFragment {
     public boolean isCompatible(Version version) {
         boolean compatA = onOrAfter(version.minimumCompatibilityVersion());
         if (compatA == false) {
-            System.out.println("compatA is false");
+            System.out.println("compatA is false: chcking this version (" + this
+                + ") is onOrAfter version.minCompatVersion (" + version.minimumCompatibilityVersion() + ")");
         }
         boolean compatB = version.onOrAfter(minimumCompatibilityVersion());
         if (compatB == false) {
