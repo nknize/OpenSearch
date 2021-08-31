@@ -283,6 +283,7 @@ public class Version implements Comparable<Version>, ToXContentFragment {
             res = computeMinCompatVersion();
             minCompatVersion = res;
         }
+        System.out.println("returning minCompat version as: " + res + " for: " + this);
         return res;
     }
 
