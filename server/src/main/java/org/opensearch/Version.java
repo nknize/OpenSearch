@@ -237,8 +237,8 @@ public class Version implements Comparable<Version>, ToXContentFragment {
 
     // LegacyESVersion major 7 is equivalent to Version major 1
     public int compareMajor(Version other) {
-        int m = major == 1 ? 7 : major;
-        int om = other.major == 1 ? 7 : other.major;
+        int m = major == 1 ? 7 : major == 2 ? 8 : major;
+        int om = other.major == 1 ? 7 : other.major == 2 ? 8 : other.major;
         return Integer.compare(m, om);
     }
 
