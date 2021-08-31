@@ -351,8 +351,15 @@ public class Version implements Comparable<Version>, ToXContentFragment {
      * Returns <code>true</code> iff both version are compatible. Otherwise <code>false</code>
      */
     public boolean isCompatible(Version version) {
-        boolean compatible = onOrAfter(version.minimumCompatibilityVersion())
-            && version.onOrAfter(minimumCompatibilityVersion());
+        boolean compatA = onOrAfter(version.minimumCompatibilityVersion());
+        if (compatA == false) {
+            System.out.println("compatA is false");
+        }
+        boolean compatB = version.onOrAfter(minimumCompatibilityVersion());
+        if (compatB == false) {
+            System.out.println("compatB is false");
+        }
+        boolean compatible = compatA && compatB;
 
         // OpenSearch version 1 is the functional equivalent of predecessor version 7
         // OpenSearch version 2 is the functional equivalent of predecessor unreleased version "8"

@@ -165,7 +165,8 @@ final class TransportHandshaker {
                 Version version = response.responseVersion;
                 if (currentVersion.isCompatible(version) == false) {
                     listener.onFailure(new IllegalStateException("Received message from unsupported version: [" + version
-                        + "] minimal compatible version is: [" + currentVersion.minimumCompatibilityVersion() + "]"));
+                        + " - " + version.id + "] minimal compatible version is: ["
+                        + currentVersion.minimumCompatibilityVersion() + "]"));
                 } else {
                     listener.onResponse(version);
                 }
