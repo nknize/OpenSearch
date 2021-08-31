@@ -293,6 +293,8 @@ public class Version implements Comparable<Version>, ToXContentFragment {
         } else if (major == 6) {
             // force the minimum compatibility for version 6 to 5.6 since we don't reference version 5 anymore
             return Version.fromId(5060099);
+        } else if (major == 2) {
+            return LegacyESVersion.V_7_10_0;
         } else if (major >= 7) {
             // all major versions from 7 onwards are compatible with last minor series of the previous major
             Version bwcVersion = null;
