@@ -338,6 +338,8 @@ public class Version implements Comparable<Version>, ToXContentFragment {
             bwcMajor = 2; // we jumped from 2 to 5
         } else if (major == 7 || major == 1) {
             return LegacyESVersion.V_6_0_0_beta1;
+        } else if (major == 2) {
+            return LegacyESVersion.V_7_0_0;
         } else {
             bwcMajor = major - 1;
         }
