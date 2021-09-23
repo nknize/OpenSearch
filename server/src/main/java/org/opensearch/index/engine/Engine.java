@@ -745,7 +745,9 @@ public abstract class Engine implements Closeable {
     /**
      * Creates a new history snapshot from either Lucene/Translog for reading operations whose seqno in the requesting
      * seqno range (both inclusive).
+     * @deprecated EXPERT: this snapshot method is specific to CCR and will be moved to a plugin in the next release
      */
+    @Deprecated
     public Translog.Snapshot newChangesSnapshot(String source, HistorySource historySource, MapperService mapperService,
                                                          long fromSeqNo, long toSeqNo, boolean requiredFullRange) throws IOException {
         return newChangesSnapshot(source, mapperService, fromSeqNo, toSeqNo, requiredFullRange);

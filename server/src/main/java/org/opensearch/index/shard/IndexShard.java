@@ -2012,11 +2012,13 @@ public class IndexShard extends AbstractIndexShardComponent implements IndicesCl
     }
 
     /**
-     *
      * Creates a new history snapshot for reading operations since
      * the provided starting seqno (inclusive) and ending seqno (inclusive)
      * The returned snapshot can be retrieved from either Lucene index or translog files.
+     *
+     * @deprecated EXPERT: this snapshot method is specific to CCR and will be moved to a plugin in the next release
      */
+    @Deprecated
     public Translog.Snapshot getHistoryOperations(String reason, Engine.HistorySource source,
                                                   long startingSeqNo, long endSeqNo) throws IOException {
         return getEngine().newChangesSnapshot(reason, source, mapperService, startingSeqNo, endSeqNo, true);

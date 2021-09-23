@@ -628,7 +628,9 @@ public class Translog extends AbstractIndexShardComponent implements IndexShardC
      * @param fromSeqNo the lower bound of the range (inclusive)
      * @param toSeqNo   the upper bound of the range (inclusive)
      * @return the new snapshot
+     * @deprecated EXPERT: this snapshot method is is specific to CCR and will be moved to a plugin in the next release
      */
+    @Deprecated
     public Snapshot newSnapshot(long fromSeqNo, long toSeqNo, boolean requiredFullRange) throws IOException {
         assert fromSeqNo <= toSeqNo : fromSeqNo + " > " + toSeqNo;
         assert fromSeqNo >= 0 : "from_seq_no must be non-negative " + fromSeqNo;
