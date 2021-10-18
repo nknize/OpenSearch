@@ -33,7 +33,9 @@
 package org.opensearch.plugins;
 
 import org.opensearch.index.IndexSettings;
+import org.opensearch.index.codec.CodecService;
 import org.opensearch.index.engine.EngineFactory;
+import org.opensearch.index.translog.TranslogConfig;
 
 import java.util.Optional;
 
@@ -52,4 +54,11 @@ public interface EnginePlugin {
      */
     Optional<EngineFactory> getEngineFactory(IndexSettings indexSettings);
 
+    default Optional<TranslogConfig> getCustomTranslogConfig(IndexSettings indexSettings) {
+        return Optional.empty();
+    }
+
+    default Optional<CodecService> getCustomCodecService(IndexSettings indexSettings) {
+        return Optional.empty();
+    }
 }

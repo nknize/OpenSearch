@@ -105,6 +105,7 @@ import org.opensearch.index.engine.CommitStats;
 import org.opensearch.index.engine.Engine;
 import org.opensearch.index.engine.Engine.GetResult;
 import org.opensearch.index.engine.EngineConfig;
+import org.opensearch.index.engine.EngineConfigFactory;
 import org.opensearch.index.engine.EngineException;
 import org.opensearch.index.engine.EngineFactory;
 import org.opensearch.index.engine.ReadOnlyEngine;
@@ -238,6 +239,7 @@ public class IndexShard extends AbstractIndexShardComponent implements IndicesCl
     private final Object engineMutex = new Object(); // lock ordering: engineMutex -> mutex
     private final AtomicReference<Engine> currentEngineReference = new AtomicReference<>();
     final EngineFactory engineFactory;
+    final EngineConfigFactory engineConfigFactory;
 
     private final IndexingOperationListener indexingOperationListeners;
     private final Runnable globalCheckpointSyncer;
@@ -300,6 +302,7 @@ public class IndexShard extends AbstractIndexShardComponent implements IndicesCl
             final MapperService mapperService,
             final SimilarityService similarityService,
             final @Nullable EngineFactory engineFactory,
+            final @Nullable EngineConfigFactory engineConfigFactory,
             final IndexEventListener indexEventListener,
             final CheckedFunction<DirectoryReader, DirectoryReader, IOException> indexReaderWrapper,
             final ThreadPool threadPool,
@@ -319,6 +322,7 @@ public class IndexShard extends AbstractIndexShardComponent implements IndicesCl
         this.similarityService = similarityService;
         Objects.requireNonNull(store, "Store must be provided to the index shard");
         this.engineFactory = Objects.requireNonNull(engineFactory);
+        this.engineConfigFactory = Objects.requireNonNull(engineConfigFactory);
         this.store = store;
         this.indexSortSupplier = indexSortSupplier;
         this.indexEventListener = indexEventListener;
@@ -2809,7 +2813,8 @@ public class IndexShard extends AbstractIndexShardComponent implements IndicesCl
                 this.warmer.warm(reader);
             }
         };
-        return new EngineConfig(shardId,
+
+        return this.engineConfigFactory.newEngineConfig(shardId,
                 threadPool, indexSettings, warmer, store, indexSettings.getMergePolicy(),
                 mapperService != null ? mapperService.indexAnalyzer() : null,
                 similarityService.similarity(mapperService), codecService, shardEventListener,
@@ -3279,6 +3284,10 @@ public class IndexShard extends AbstractIndexShardComponent implements IndicesCl
 
     EngineFactory getEngineFactory() {
         return engineFactory;
+    }
+
+    EngineConfigFactory getEngineConfigFactory() {
+        return engineConfigFactory;
     }
 
     // for tests

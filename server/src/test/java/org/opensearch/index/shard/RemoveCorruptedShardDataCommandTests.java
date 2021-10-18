@@ -58,6 +58,7 @@ import org.opensearch.env.TestEnvironment;
 import org.opensearch.gateway.PersistedClusterStateService;
 import org.opensearch.index.IndexSettings;
 import org.opensearch.index.MergePolicyConfig;
+import org.opensearch.index.engine.EngineConfigFactory;
 import org.opensearch.index.engine.EngineException;
 import org.opensearch.index.engine.InternalEngineFactory;
 import org.opensearch.index.seqno.RetentionLeaseSyncer;
@@ -148,7 +149,8 @@ public class RemoveCorruptedShardDataCommandTests extends IndexShardTestCase {
         }
 
         indexShard = newStartedShard(p -> newShard(routing, shardPath, indexMetadata, null, null,
-            new InternalEngineFactory(), () -> { }, RetentionLeaseSyncer.EMPTY, EMPTY_EVENT_LISTENER), true);
+            new InternalEngineFactory(), new EngineConfigFactory(new IndexSettings(indexMetadata, settings)),
+            () -> { }, RetentionLeaseSyncer.EMPTY, EMPTY_EVENT_LISTENER), true);
 
         translogPath = shardPath.resolveTranslog();
         indexPath = shardPath.resolveIndex();
@@ -498,7 +500,8 @@ public class RemoveCorruptedShardDataCommandTests extends IndexShardTestCase {
         };
 
         return newShard(shardRouting, shardPath, metadata, storeProvider, null, indexShard.engineFactory,
-            indexShard.getGlobalCheckpointSyncer(), indexShard.getRetentionLeaseSyncer(), EMPTY_EVENT_LISTENER);
+            indexShard.getEngineConfigFactory(), indexShard.getGlobalCheckpointSyncer(), indexShard.getRetentionLeaseSyncer(),
+            EMPTY_EVENT_LISTENER);
     }
 
     private int indexDocs(IndexShard indexShard, boolean flushLast) throws IOException {

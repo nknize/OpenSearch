@@ -32,6 +32,7 @@
 
 package org.opensearch.indices;
 
+import org.apache.lucene.codecs.Codec;
 import org.opensearch.action.admin.indices.rollover.Condition;
 import org.opensearch.action.admin.indices.rollover.MaxAgeCondition;
 import org.opensearch.action.admin.indices.rollover.MaxDocsCondition;
@@ -96,7 +97,7 @@ public class IndicesModule extends AbstractModule {
     private final MapperRegistry mapperRegistry;
 
     public IndicesModule(List<MapperPlugin> mapperPlugins) {
-        this.mapperRegistry = new MapperRegistry(getMappers(mapperPlugins), getMetadataMappers(mapperPlugins),
+        this.mapperRegistry = new MapperRegistry(getMappers(mapperPlugins), getMapperCodecs(mapperPlugins), getMetadataMappers(mapperPlugins),
                 getFieldFilter(mapperPlugins));
         registerBuiltinWritables();
     }
@@ -155,6 +156,19 @@ public class IndicesModule extends AbstractModule {
             }
         }
         return Collections.unmodifiableMap(mappers);
+    }
+
+    public static Map<String, Codec> getMapperCodecs(List<MapperPlugin> mapperPlugins) {
+        Map<String, Codec> mapperCodecs = new LinkedHashMap<>();
+
+        for (MapperPlugin mapperPlugin : mapperPlugins) {
+            for (Map.Entry<String, Codec> entry : mapperPlugin.getCodecs().entrySet()) {
+                if (mapperCodecs.put(entry.getKey(), entry.getValue()) != null) {
+                    throw new IllegalArgumentException("Codec for Mapper [" + entry.getKey() + "] is already registered");
+                }
+            }
+        }
+        return Collections.unmodifiableMap(mapperCodecs);
     }
 
     private static final Map<String, MetadataFieldMapper.TypeParser> builtInMetadataMappers = initBuiltInMetadataMappers();

@@ -74,6 +74,7 @@ import org.opensearch.index.cache.query.DisabledQueryCache;
 import org.opensearch.index.cache.query.IndexQueryCache;
 import org.opensearch.index.cache.query.QueryCache;
 import org.opensearch.index.engine.Engine;
+import org.opensearch.index.engine.EngineConfigFactory;
 import org.opensearch.index.engine.InternalEngineFactory;
 import org.opensearch.index.engine.InternalEngineTests;
 import org.opensearch.index.fielddata.IndexFieldDataCache;
@@ -191,6 +192,7 @@ public class IndexModuleTests extends OpenSearchTestCase {
                 indexSettings,
                 emptyAnalysisRegistry,
                 engineFactory,
+                new EngineConfigFactory(indexSettings),
                 Collections.emptyMap(),
                 () -> true,
                 new IndexNameExpressionResolver(new ThreadContext(Settings.EMPTY)),
@@ -214,8 +216,9 @@ public class IndexModuleTests extends OpenSearchTestCase {
         final IndexSettings indexSettings = IndexSettingsModule.newIndexSettings(index, settings);
         final Map<String, IndexStorePlugin.DirectoryFactory> indexStoreFactories = singletonMap(
             "foo_store", new FooFunction());
-        final IndexModule module = new IndexModule(indexSettings, emptyAnalysisRegistry, new InternalEngineFactory(), indexStoreFactories,
-            () -> true, new IndexNameExpressionResolver(new ThreadContext(Settings.EMPTY)), Collections.emptyMap());
+        final IndexModule module = new IndexModule(indexSettings, emptyAnalysisRegistry, new InternalEngineFactory(),
+            new EngineConfigFactory(indexSettings), indexStoreFactories, () -> true,
+            new IndexNameExpressionResolver(new ThreadContext(Settings.EMPTY)), Collections.emptyMap());
 
         final IndexService indexService = newIndexService(module);
         assertThat(indexService.getDirectoryFactory(), instanceOf(FooFunction.class));
@@ -526,6 +529,7 @@ public class IndexModuleTests extends OpenSearchTestCase {
         final IndexModule module = new IndexModule(indexSettings,
             emptyAnalysisRegistry,
             new InternalEngineFactory(),
+            new EngineConfigFactory(indexSettings),
             Collections.emptyMap(),
             () -> true,
             new IndexNameExpressionResolver(new ThreadContext(Settings.EMPTY)),
@@ -548,8 +552,9 @@ public class IndexModuleTests extends OpenSearchTestCase {
     }
 
     private static IndexModule createIndexModule(IndexSettings indexSettings, AnalysisRegistry emptyAnalysisRegistry) {
-        return new IndexModule(indexSettings, emptyAnalysisRegistry, new InternalEngineFactory(), Collections.emptyMap(), () -> true,
-            new IndexNameExpressionResolver(new ThreadContext(Settings.EMPTY)), Collections.emptyMap());
+        return new IndexModule(indexSettings, emptyAnalysisRegistry, new InternalEngineFactory(), new EngineConfigFactory(indexSettings),
+            Collections.emptyMap(), () -> true, new IndexNameExpressionResolver(new ThreadContext(Settings.EMPTY)),
+            Collections.emptyMap());
     }
 
     class CustomQueryCache implements QueryCache {

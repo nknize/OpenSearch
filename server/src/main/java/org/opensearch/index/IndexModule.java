@@ -62,6 +62,7 @@ import org.opensearch.index.cache.query.DisabledQueryCache;
 import org.opensearch.index.cache.query.IndexQueryCache;
 import org.opensearch.index.cache.query.QueryCache;
 import org.opensearch.index.engine.Engine;
+import org.opensearch.index.engine.EngineConfigFactory;
 import org.opensearch.index.engine.EngineFactory;
 import org.opensearch.index.mapper.MapperService;
 import org.opensearch.index.shard.IndexEventListener;
@@ -145,6 +146,7 @@ public final class IndexModule {
     private final IndexSettings indexSettings;
     private final AnalysisRegistry analysisRegistry;
     private final EngineFactory engineFactory;
+    private final EngineConfigFactory engineConfigFactory;
     private SetOnce<Function<IndexService,
         CheckedFunction<DirectoryReader, DirectoryReader, IOException>>> indexReaderWrapper = new SetOnce<>();
     private final Set<IndexEventListener> indexEventListeners = new HashSet<>();
@@ -171,6 +173,7 @@ public final class IndexModule {
             final IndexSettings indexSettings,
             final AnalysisRegistry analysisRegistry,
             final EngineFactory engineFactory,
+            final EngineConfigFactory engineConfigFactory,
             final Map<String, IndexStorePlugin.DirectoryFactory> directoryFactories,
             final BooleanSupplier allowExpensiveQueries,
             final IndexNameExpressionResolver expressionResolver,
@@ -178,6 +181,7 @@ public final class IndexModule {
         this.indexSettings = indexSettings;
         this.analysisRegistry = analysisRegistry;
         this.engineFactory = Objects.requireNonNull(engineFactory);
+        this.engineConfigFactory = Objects.requireNonNull(engineConfigFactory);
         this.searchOperationListeners.add(new SearchSlowLog(indexSettings));
         this.indexOperationListeners.add(new IndexingSlowLog(indexSettings));
         this.directoryFactories = Collections.unmodifiableMap(directoryFactories);
@@ -466,10 +470,10 @@ public final class IndexModule {
             }
             final IndexService indexService = new IndexService(indexSettings, indexCreationContext, environment, xContentRegistry,
                 new SimilarityService(indexSettings, scriptService, similarities), shardStoreDeleter, indexAnalyzers,
-                engineFactory, circuitBreakerService, bigArrays, threadPool, scriptService, clusterService, client, queryCache,
-                directoryFactory, eventListener, readerWrapperFactory, mapperRegistry, indicesFieldDataCache, searchOperationListeners,
-                indexOperationListeners, namedWriteableRegistry, idFieldDataEnabled, allowExpensiveQueries, expressionResolver,
-                valuesSourceRegistry, recoveryStateFactory);
+                engineFactory, engineConfigFactory, circuitBreakerService, bigArrays, threadPool, scriptService, clusterService, client,
+                queryCache, directoryFactory, eventListener, readerWrapperFactory, mapperRegistry, indicesFieldDataCache,
+                searchOperationListeners, indexOperationListeners, namedWriteableRegistry, idFieldDataEnabled, allowExpensiveQueries,
+                expressionResolver, valuesSourceRegistry, recoveryStateFactory);
             success = true;
             return indexService;
         } finally {

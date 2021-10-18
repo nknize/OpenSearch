@@ -98,6 +98,7 @@ import org.opensearch.index.engine.DocIdSeqNoAndSource;
 import org.opensearch.index.engine.Engine;
 import org.opensearch.index.engine.Engine.DeleteResult;
 import org.opensearch.index.engine.EngineConfig;
+import org.opensearch.index.engine.EngineConfigFactory;
 import org.opensearch.index.engine.EngineTestCase;
 import org.opensearch.index.engine.InternalEngine;
 import org.opensearch.index.engine.InternalEngineFactory;
@@ -1563,7 +1564,8 @@ public class IndexShardTests extends IndexShardTestCase {
 
         try (Store store = createStore(shardId, new IndexSettings(metadata, Settings.EMPTY), directory)) {
             IndexShard shard = newShard(shardRouting, shardPath, metadata, i -> store, null, new InternalEngineFactory(),
-                () -> { }, RetentionLeaseSyncer.EMPTY, EMPTY_EVENT_LISTENER);
+                new EngineConfigFactory(new IndexSettings(metadata, metadata.getSettings())), () -> { },
+                RetentionLeaseSyncer.EMPTY, EMPTY_EVENT_LISTENER);
             AtomicBoolean failureCallbackTriggered = new AtomicBoolean(false);
             shard.addShardFailureCallback((ig)->failureCallbackTriggered.set(true));
 
@@ -2319,6 +2321,7 @@ public class IndexShardTests extends IndexShardTestCase {
                 null,
                 null,
                 shard.getEngineFactory(),
+                shard.getEngineConfigFactory(),
                 shard.getGlobalCheckpointSyncer(),
                 shard.getRetentionLeaseSyncer(),
                 EMPTY_EVENT_LISTENER);
@@ -2433,6 +2436,7 @@ public class IndexShardTests extends IndexShardTestCase {
                 null,
                 wrapper,
                 new InternalEngineFactory(),
+                shard.getEngineConfigFactory(),
                 () -> {},
                 RetentionLeaseSyncer.EMPTY,
                 EMPTY_EVENT_LISTENER);
@@ -2572,6 +2576,7 @@ public class IndexShardTests extends IndexShardTestCase {
                 null,
                 wrapper,
                 new InternalEngineFactory(),
+                shard.getEngineConfigFactory(),
                 () -> {},
                 RetentionLeaseSyncer.EMPTY,
                 EMPTY_EVENT_LISTENER);
@@ -3155,7 +3160,8 @@ public class IndexShardTests extends IndexShardTestCase {
             .build();
 
         IndexShard corruptedShard = newShard(shardRouting, shardPath, indexMetadata, null, null, indexShard.engineFactory,
-            indexShard.getGlobalCheckpointSyncer(), indexShard.getRetentionLeaseSyncer(), EMPTY_EVENT_LISTENER);
+            indexShard.engineConfigFactory, indexShard.getGlobalCheckpointSyncer(), indexShard.getRetentionLeaseSyncer(),
+            EMPTY_EVENT_LISTENER);
 
         final IndexShardRecoveryException indexShardRecoveryException =
             expectThrows(IndexShardRecoveryException.class, () -> newStartedShard(p -> corruptedShard, true));
@@ -3199,7 +3205,8 @@ public class IndexShardTests extends IndexShardTestCase {
 
         // try to start shard on corrupted files
         final IndexShard corruptedShard = newShard(shardRouting, shardPath, indexMetadata, null, null, indexShard.engineFactory,
-            indexShard.getGlobalCheckpointSyncer(), indexShard.getRetentionLeaseSyncer(), EMPTY_EVENT_LISTENER);
+            indexShard.engineConfigFactory, indexShard.getGlobalCheckpointSyncer(), indexShard.getRetentionLeaseSyncer(),
+            EMPTY_EVENT_LISTENER);
 
         final IndexShardRecoveryException exception1 = expectThrows(IndexShardRecoveryException.class,
             () -> newStartedShard(p -> corruptedShard, true));
@@ -3221,7 +3228,8 @@ public class IndexShardTests extends IndexShardTestCase {
 
         // try to start another time shard on corrupted files
         final IndexShard corruptedShard2 = newShard(shardRouting, shardPath, indexMetadata, null, null, indexShard.engineFactory,
-            indexShard.getGlobalCheckpointSyncer(), indexShard.getRetentionLeaseSyncer(), EMPTY_EVENT_LISTENER);
+            indexShard.engineConfigFactory, indexShard.getGlobalCheckpointSyncer(), indexShard.getRetentionLeaseSyncer(),
+            EMPTY_EVENT_LISTENER);
 
         final IndexShardRecoveryException exception2 = expectThrows(IndexShardRecoveryException.class,
             () -> newStartedShard(p -> corruptedShard2, true));
@@ -3260,7 +3268,8 @@ public class IndexShardTests extends IndexShardTestCase {
                 .put(IndexSettings.INDEX_CHECK_ON_STARTUP.getKey(), randomFrom("false", "true", "checksum")))
             .build();
         final IndexShard newShard = newShard(shardRouting, indexShard.shardPath(), indexMetadata, null, null, indexShard.engineFactory,
-                indexShard.getGlobalCheckpointSyncer(), indexShard.getRetentionLeaseSyncer(), EMPTY_EVENT_LISTENER);
+                indexShard.engineConfigFactory, indexShard.getGlobalCheckpointSyncer(), indexShard.getRetentionLeaseSyncer(),
+            EMPTY_EVENT_LISTENER);
 
         Store.MetadataSnapshot storeFileMetadatas = newShard.snapshotStoreMetadata();
         assertTrue("at least 2 files, commit and data: " + storeFileMetadatas.toString(), storeFileMetadatas.size() > 1);
@@ -3685,7 +3694,8 @@ public class IndexShardTests extends IndexShardTestCase {
         ShardPath shardPath = new ShardPath(false, nodePath.resolve(shardId), nodePath.resolve(shardId), shardId);
         AtomicBoolean markedInactive = new AtomicBoolean();
         AtomicReference<IndexShard> primaryRef = new AtomicReference<>();
-        IndexShard primary = newShard(shardRouting, shardPath, metadata, null, null, new InternalEngineFactory(), () -> { },
+        IndexShard primary = newShard(shardRouting, shardPath, metadata, null, null, new InternalEngineFactory(),
+            new EngineConfigFactory(new IndexSettings(metadata, settings)), () -> { },
             RetentionLeaseSyncer.EMPTY, new IndexEventListener() {
                 @Override
                 public void onShardInactive(IndexShard indexShard) {
@@ -4166,7 +4176,7 @@ public class IndexShardTests extends IndexShardTestCase {
                 protected void ensureMaxSeqNoEqualsToGlobalCheckpoint(SeqNoStats seqNoStats) {
                     // just like a following shard, we need to skip this check for now.
                 }
-            }
+            }, shard.getEngineConfigFactory()
         );
         DiscoveryNode localNode = new DiscoveryNode("foo", buildNewFakeTransportAddress(), emptyMap(), emptySet(), Version.CURRENT);
         readonlyShard.markAsRecovering("store", new RecoveryState(readonlyShard.routingEntry(), localNode, null));

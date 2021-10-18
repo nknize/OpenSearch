@@ -67,6 +67,9 @@ public class CodecService {
                     new PerFieldMappingPostingFormatCodec(Mode.BEST_SPEED, mapperService, logger));
             codecs.put(BEST_COMPRESSION_CODEC,
                     new PerFieldMappingPostingFormatCodec(Mode.BEST_COMPRESSION, mapperService, logger));
+            for (String codec : mapperService.getAvailableCodecs()) {
+                codecs.put(codec, mapperService.getRegisteredCodec(codec));
+            }
         }
         codecs.put(LUCENE_DEFAULT_CODEC, Codec.getDefault());
         for (String codec : Codec.availableCodecs()) {
