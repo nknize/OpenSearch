@@ -36,7 +36,6 @@ import com.carrotsearch.hppc.cursors.ObjectCursor;
 import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.DelegatingAnalyzerWrapper;
-import org.apache.lucene.codecs.Codec;
 import org.opensearch.Assertions;
 import org.opensearch.LegacyESVersion;
 import org.opensearch.Version;
@@ -706,14 +705,6 @@ public class MapperService extends AbstractIndexComponent implements Closeable {
      */
     public boolean isMetadataField(String field) {
         return mapperRegistry.isMetadataField(indexVersionCreated, field);
-    }
-
-    public Set<String> getAvailableCodecs() {
-        return mapperRegistry.getAvailableCodecs();
-    }
-
-    public Codec getRegisteredCodec(String field) {
-        return mapperRegistry.getRegisteredCodec(field);
     }
 
     /**

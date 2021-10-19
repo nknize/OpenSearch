@@ -32,7 +32,6 @@
 
 package org.opensearch.plugins;
 
-import org.apache.lucene.codecs.Codec;
 import org.opensearch.index.mapper.Mapper;
 import org.opensearch.index.mapper.MetadataFieldMapper;
 
@@ -54,16 +53,6 @@ public interface MapperPlugin {
      * mapper settings into a {@link Mapper}.
      */
     default Map<String, Mapper.TypeParser> getMappers() {
-        return Collections.emptyMap();
-    }
-
-    /**
-     * Returns additional codec implementations added by the MapperPlugin.
-     * <p>
-     * The key of the returned {@link Map} is the unique name for the mapper which is used to link the {@code type} to
-     * the custom {@link Codec} implementation.
-     */
-    default Map<String, Codec> getCodecs() {
         return Collections.emptyMap();
     }
 
