@@ -40,10 +40,7 @@ import org.opensearch.test.OpenSearchTestCase;
 
 public class IndexingPressureTests extends OpenSearchTestCase {
 
-    private final Settings settings = Settings.builder()
-        .put(IndexingPressure.MAX_INDEXING_BYTES.getKey(), "10KB")
-        .put(ShardIndexingPressureSettings.SHARD_INDEXING_PRESSURE_ENABLED.getKey(), false)
-        .build();
+    private final Settings settings = Settings.builder().put(IndexingPressure.MAX_INDEXING_BYTES.getKey(), "10KB").build();
 
     public void testMemoryBytesMarkedAndReleased() {
         IndexingPressure indexingPressure = new IndexingPressure(settings);

@@ -34,6 +34,7 @@ package org.opensearch.action.support.replication;
 
 import org.opensearch.OpenSearchException;
 import org.opensearch.action.ActionListener;
+import org.opensearch.index.IndexingPressure;
 import org.opensearch.action.support.ActionFilters;
 import org.opensearch.action.support.ActionTestUtils;
 import org.opensearch.action.support.PlainActionFuture;
@@ -55,7 +56,6 @@ import org.opensearch.common.lease.Releasable;
 import org.opensearch.common.settings.Settings;
 import org.opensearch.index.Index;
 import org.opensearch.index.IndexService;
-import org.opensearch.index.IndexingPressureService;
 import org.opensearch.index.shard.IndexShard;
 import org.opensearch.index.shard.ShardId;
 import org.opensearch.index.shard.ShardNotFoundException;
@@ -427,7 +427,7 @@ public class TransportWriteActionTests extends OpenSearchTestCase {
                 TestRequest::new,
                 ignore -> ThreadPool.Names.SAME,
                 false,
-                new IndexingPressureService(Settings.EMPTY, TransportWriteActionTests.this.clusterService),
+                new IndexingPressure(Settings.EMPTY),
                 new SystemIndices(emptyMap())
             );
             this.withDocumentFailureOnPrimary = withDocumentFailureOnPrimary;
@@ -455,7 +455,7 @@ public class TransportWriteActionTests extends OpenSearchTestCase {
                 TestRequest::new,
                 ignore -> ThreadPool.Names.SAME,
                 false,
-                new IndexingPressureService(settings, clusterService),
+                new IndexingPressure(settings),
                 new SystemIndices(emptyMap())
             );
             this.withDocumentFailureOnPrimary = false;

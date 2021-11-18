@@ -54,8 +54,8 @@ import org.opensearch.common.util.concurrent.AtomicArray;
 import org.opensearch.common.util.concurrent.ThreadContext;
 import org.opensearch.common.xcontent.XContentType;
 import org.opensearch.index.IndexNotFoundException;
-import org.opensearch.index.IndexingPressureService;
 import org.opensearch.rest.action.document.RestBulkAction;
+import org.opensearch.index.IndexingPressure;
 import org.opensearch.indices.SystemIndices;
 import org.opensearch.tasks.Task;
 import org.opensearch.test.OpenSearchTestCase;
@@ -280,7 +280,7 @@ public class TransportBulkActionTookTests extends OpenSearchTestCase {
                 actionFilters,
                 indexNameExpressionResolver,
                 autoCreateIndex,
-                new IndexingPressureService(Settings.EMPTY, clusterService),
+                new IndexingPressure(Settings.EMPTY),
                 new SystemIndices(emptyMap()),
                 relativeTimeProvider
             );

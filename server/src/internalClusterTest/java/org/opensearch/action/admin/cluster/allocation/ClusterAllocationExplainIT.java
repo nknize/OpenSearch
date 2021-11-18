@@ -1410,7 +1410,6 @@ public final class ClusterAllocationExplainIT extends OpenSearchIntegTestCase {
                             || parser.currentName().equals("name")
                             || parser.currentName().equals("transport_address")
                             || parser.currentName().equals("weight_ranking")
-                            || parser.currentName().equals("attributes")
                     );
                     // Skip past attributes object
                     if (parser.currentName().equals("attributes")) {
@@ -1544,11 +1543,6 @@ public final class ClusterAllocationExplainIT extends OpenSearchIntegTestCase {
         parser.nextToken();
         assertNotNull(parser.text());
         parser.nextToken();
-        assertEquals("node_attributes", parser.currentName());
-        // skip past node_attributes object
-        while (!parser.currentName().equals("node_decision")) {
-            parser.nextToken();
-        }
         assertEquals("node_decision", parser.currentName());
         parser.nextToken();
         return nodeName;

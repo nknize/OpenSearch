@@ -708,7 +708,6 @@ public class NodeStatsTests extends OpenSearchTestCase {
             ingestStats,
             adaptiveSelectionStats,
             scriptCacheStats,
-            null,
             null
         );
     }

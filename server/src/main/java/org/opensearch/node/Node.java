@@ -36,7 +36,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.util.Constants;
 import org.apache.lucene.util.SetOnce;
-import org.opensearch.index.IndexingPressureService;
 import org.opensearch.watcher.ResourceWatcherService;
 import org.opensearch.Assertions;
 import org.opensearch.Build;
@@ -121,6 +120,7 @@ import org.opensearch.gateway.MetaStateService;
 import org.opensearch.gateway.PersistedClusterStateService;
 import org.opensearch.http.HttpServerTransport;
 import org.opensearch.index.IndexSettings;
+import org.opensearch.index.IndexingPressure;
 import org.opensearch.index.analysis.AnalysisRegistry;
 import org.opensearch.index.engine.EngineFactory;
 import org.opensearch.indices.IndicesModule;
@@ -218,7 +218,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
-import static org.opensearch.index.ShardIndexingPressureSettings.SHARD_INDEXING_PRESSURE_ENABLED_ATTRIBUTE_KEY;
 
 /**
  * A node represent a node within a cluster ({@code cluster.name}). The {@link #client()} can be used
@@ -338,12 +337,6 @@ public class Node implements Closeable {
             Settings tmpSettings = Settings.builder()
                 .put(initialEnvironment.settings())
                 .put(Client.CLIENT_TYPE_SETTING_S.getKey(), CLIENT_TYPE)
-                .build();
-
-            // Enabling shard indexing backpressure node-attribute
-            tmpSettings = Settings.builder()
-                .put(tmpSettings)
-                .put(NODE_ATTRIBUTES.getKey() + SHARD_INDEXING_PRESSURE_ENABLED_ATTRIBUTE_KEY, "true")
                 .build();
 
             final JvmInfo jvmInfo = JvmInfo.jvmInfo();
@@ -742,10 +735,7 @@ public class Node implements Closeable {
                 SearchExecutionStatsCollector.makeWrapper(responseCollectorService)
             );
             final HttpServerTransport httpServerTransport = newHttpTransport(networkModule);
-            final IndexingPressureService indexingPressureService = new IndexingPressureService(settings, clusterService);
-            // Going forward, IndexingPressureService will have required constructs for exposing listeners/interfaces for plugin
-            // development. Then we can deprecate Getter and Setter for IndexingPressureService in ClusterService (#478).
-            clusterService.setIndexingPressureService(indexingPressureService);
+            final IndexingPressure indexingLimits = new IndexingPressure(settings);
 
             final RecoverySettings recoverySettings = new RecoverySettings(settings, settingsModule.getClusterSettings());
             RepositoriesModule repositoriesModule = new RepositoriesModule(
@@ -833,7 +823,7 @@ public class Node implements Closeable {
                 settingsModule.getSettingsFilter(),
                 responseCollectorService,
                 searchTransportService,
-                indexingPressureService,
+                indexingLimits,
                 searchModule.getValuesSourceRegistry().getUsageService()
             );
 
@@ -889,7 +879,7 @@ public class Node implements Closeable {
                 b.bind(ScriptService.class).toInstance(scriptService);
                 b.bind(AnalysisRegistry.class).toInstance(analysisModule.getAnalysisRegistry());
                 b.bind(IngestService.class).toInstance(ingestService);
-                b.bind(IndexingPressureService.class).toInstance(indexingPressureService);
+                b.bind(IndexingPressure.class).toInstance(indexingLimits);
                 b.bind(UsageService.class).toInstance(usageService);
                 b.bind(AggregationUsageService.class).toInstance(searchModule.getValuesSourceRegistry().getUsageService());
                 b.bind(NamedWriteableRegistry.class).toInstance(namedWriteableRegistry);

@@ -166,7 +166,7 @@ import org.opensearch.env.TestEnvironment;
 import org.opensearch.gateway.MetaStateService;
 import org.opensearch.gateway.TransportNodesListGatewayStartedShards;
 import org.opensearch.index.Index;
-import org.opensearch.index.IndexingPressureService;
+import org.opensearch.index.IndexingPressure;
 import org.opensearch.index.analysis.AnalysisRegistry;
 import org.opensearch.index.seqno.GlobalCheckpointSyncAction;
 import org.opensearch.index.seqno.RetentionLeaseSyncer;
@@ -1848,7 +1848,7 @@ public class SnapshotResiliencyTests extends OpenSearchTestCase {
                             threadPool,
                             shardStateAction,
                             actionFilters,
-                            new IndexingPressureService(settings, clusterService),
+                            new IndexingPressure(settings),
                             new SystemIndices(emptyMap())
                         )
                     ),
@@ -1902,7 +1902,7 @@ public class SnapshotResiliencyTests extends OpenSearchTestCase {
                     mappingUpdatedAction,
                     new UpdateHelper(scriptService),
                     actionFilters,
-                    new IndexingPressureService(settings, clusterService),
+                    new IndexingPressure(settings),
                     new SystemIndices(emptyMap())
                 );
                 actions.put(
@@ -1925,7 +1925,7 @@ public class SnapshotResiliencyTests extends OpenSearchTestCase {
                         actionFilters,
                         indexNameExpressionResolver,
                         new AutoCreateIndex(settings, clusterSettings, indexNameExpressionResolver, new SystemIndices(emptyMap())),
-                        new IndexingPressureService(settings, clusterService),
+                        new IndexingPressure(settings),
                         new SystemIndices(emptyMap())
                     )
                 );

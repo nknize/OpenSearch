@@ -44,14 +44,13 @@ import org.opensearch.cluster.metadata.Metadata;
 import org.opensearch.cluster.node.DiscoveryNode;
 import org.opensearch.cluster.node.DiscoveryNodes;
 import org.opensearch.cluster.service.ClusterService;
-import org.opensearch.common.settings.ClusterSettings;
 import org.opensearch.common.settings.Settings;
 import org.opensearch.common.unit.TimeValue;
 import org.opensearch.common.util.concurrent.AtomicArray;
 import org.opensearch.common.util.concurrent.OpenSearchExecutors;
 import org.opensearch.index.IndexNotFoundException;
-import org.opensearch.index.IndexingPressureService;
 import org.opensearch.index.VersionType;
+import org.opensearch.index.IndexingPressure;
 import org.opensearch.indices.SystemIndices;
 import org.opensearch.tasks.Task;
 import org.opensearch.test.OpenSearchTestCase;
@@ -152,10 +151,7 @@ public class TransportBulkActionIndicesThatCannotBeCreatedTests extends OpenSear
             mock(ActionFilters.class),
             null,
             null,
-            new IndexingPressureService(
-                Settings.EMPTY,
-                new ClusterService(Settings.EMPTY, new ClusterSettings(Settings.EMPTY, ClusterSettings.BUILT_IN_CLUSTER_SETTINGS), null)
-            ),
+            new IndexingPressure(Settings.EMPTY),
             new SystemIndices(emptyMap())
         ) {
             @Override

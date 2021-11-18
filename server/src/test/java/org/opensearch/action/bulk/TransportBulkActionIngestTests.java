@@ -67,7 +67,7 @@ import org.opensearch.common.util.concurrent.OpenSearchExecutors;
 import org.opensearch.common.util.concurrent.ThreadContext;
 import org.opensearch.index.IndexNotFoundException;
 import org.opensearch.index.IndexSettings;
-import org.opensearch.index.IndexingPressureService;
+import org.opensearch.index.IndexingPressure;
 import org.opensearch.indices.SystemIndices;
 import org.opensearch.ingest.IngestService;
 import org.opensearch.tasks.Task;
@@ -165,10 +165,7 @@ public class TransportBulkActionIngestTests extends OpenSearchTestCase {
                     new IndexNameExpressionResolver(new ThreadContext(Settings.EMPTY)),
                     new SystemIndices(emptyMap())
                 ),
-                new IndexingPressureService(
-                    SETTINGS,
-                    new ClusterService(SETTINGS, new ClusterSettings(SETTINGS, ClusterSettings.BUILT_IN_CLUSTER_SETTINGS), null)
-                ),
+                new IndexingPressure(SETTINGS),
                 new SystemIndices(emptyMap())
             );
         }

@@ -68,7 +68,7 @@ import org.opensearch.common.unit.TimeValue;
 import org.opensearch.common.xcontent.ToXContent;
 import org.opensearch.common.xcontent.XContentHelper;
 import org.opensearch.common.xcontent.XContentType;
-import org.opensearch.index.IndexingPressureService;
+import org.opensearch.index.IndexingPressure;
 import org.opensearch.index.engine.Engine;
 import org.opensearch.index.engine.VersionConflictEngineException;
 import org.opensearch.index.get.GetResult;
@@ -122,7 +122,7 @@ public class TransportShardBulkAction extends TransportWriteAction<BulkShardRequ
         MappingUpdatedAction mappingUpdatedAction,
         UpdateHelper updateHelper,
         ActionFilters actionFilters,
-        IndexingPressureService indexingPressureService,
+        IndexingPressure indexingPressure,
         SystemIndices systemIndices
     ) {
         super(
@@ -138,7 +138,7 @@ public class TransportShardBulkAction extends TransportWriteAction<BulkShardRequ
             BulkShardRequest::new,
             EXECUTOR_NAME_FUNCTION,
             false,
-            indexingPressureService,
+            indexingPressure,
             systemIndices
         );
         this.updateHelper = updateHelper;

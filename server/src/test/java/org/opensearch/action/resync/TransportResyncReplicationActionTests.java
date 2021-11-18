@@ -33,6 +33,8 @@ package org.opensearch.action.resync;
 
 import org.opensearch.Version;
 import org.opensearch.action.ActionListener;
+import org.opensearch.index.IndexSettings;
+import org.opensearch.index.IndexingPressure;
 import org.opensearch.action.support.ActionFilters;
 import org.opensearch.action.support.PlainActionFuture;
 import org.opensearch.cluster.ClusterState;
@@ -51,8 +53,6 @@ import org.opensearch.common.settings.Settings;
 import org.opensearch.common.util.PageCacheRecycler;
 import org.opensearch.index.Index;
 import org.opensearch.index.IndexService;
-import org.opensearch.index.IndexSettings;
-import org.opensearch.index.IndexingPressureService;
 import org.opensearch.index.shard.IndexShard;
 import org.opensearch.index.shard.ReplicationGroup;
 import org.opensearch.index.shard.ShardId;
@@ -192,7 +192,7 @@ public class TransportResyncReplicationActionTests extends OpenSearchTestCase {
                     threadPool,
                     shardStateAction,
                     new ActionFilters(new HashSet<>()),
-                    new IndexingPressureService(Settings.EMPTY, clusterService),
+                    new IndexingPressure(Settings.EMPTY),
                     new SystemIndices(emptyMap())
                 );
 

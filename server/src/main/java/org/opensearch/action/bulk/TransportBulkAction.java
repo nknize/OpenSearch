@@ -75,7 +75,7 @@ import org.opensearch.common.unit.TimeValue;
 import org.opensearch.common.util.concurrent.AtomicArray;
 import org.opensearch.index.Index;
 import org.opensearch.index.IndexNotFoundException;
-import org.opensearch.index.IndexingPressureService;
+import org.opensearch.index.IndexingPressure;
 import org.opensearch.index.VersionType;
 import org.opensearch.index.seqno.SequenceNumbers;
 import org.opensearch.index.shard.ShardId;
@@ -127,7 +127,7 @@ public class TransportBulkAction extends HandledTransportAction<BulkRequest, Bul
     private final NodeClient client;
     private final IndexNameExpressionResolver indexNameExpressionResolver;
     private static final String DROPPED_ITEM_WITH_AUTO_GENERATED_ID = "auto-generated";
-    private final IndexingPressureService indexingPressureService;
+    private final IndexingPressure indexingPressure;
     private final SystemIndices systemIndices;
 
     @Inject
@@ -141,7 +141,7 @@ public class TransportBulkAction extends HandledTransportAction<BulkRequest, Bul
         ActionFilters actionFilters,
         IndexNameExpressionResolver indexNameExpressionResolver,
         AutoCreateIndex autoCreateIndex,
-        IndexingPressureService indexingPressureService,
+        IndexingPressure indexingPressure,
         SystemIndices systemIndices
     ) {
         this(
@@ -154,7 +154,7 @@ public class TransportBulkAction extends HandledTransportAction<BulkRequest, Bul
             actionFilters,
             indexNameExpressionResolver,
             autoCreateIndex,
-            indexingPressureService,
+            indexingPressure,
             systemIndices,
             System::nanoTime
         );
@@ -170,7 +170,7 @@ public class TransportBulkAction extends HandledTransportAction<BulkRequest, Bul
         ActionFilters actionFilters,
         IndexNameExpressionResolver indexNameExpressionResolver,
         AutoCreateIndex autoCreateIndex,
-        IndexingPressureService indexingPressureService,
+        IndexingPressure indexingPressure,
         SystemIndices systemIndices,
         LongSupplier relativeTimeProvider
     ) {
@@ -185,7 +185,7 @@ public class TransportBulkAction extends HandledTransportAction<BulkRequest, Bul
         this.ingestForwarder = new IngestActionForwarder(transportService);
         this.client = client;
         this.indexNameExpressionResolver = indexNameExpressionResolver;
-        this.indexingPressureService = indexingPressureService;
+        this.indexingPressure = indexingPressure;
         this.systemIndices = systemIndices;
         clusterService.addStateApplier(this.ingestForwarder);
     }
@@ -212,7 +212,7 @@ public class TransportBulkAction extends HandledTransportAction<BulkRequest, Bul
     protected void doExecute(Task task, BulkRequest bulkRequest, ActionListener<BulkResponse> listener) {
         final long indexingBytes = bulkRequest.ramBytesUsed();
         final boolean isOnlySystem = isOnlySystem(bulkRequest, clusterService.state().metadata().getIndicesLookup(), systemIndices);
-        final Releasable releasable = indexingPressureService.markCoordinatingOperationStarted(indexingBytes, isOnlySystem);
+        final Releasable releasable = indexingPressure.markCoordinatingOperationStarted(indexingBytes, isOnlySystem);
         final ActionListener<BulkResponse> releasingListener = ActionListener.runBefore(listener, releasable::close);
         final String executorName = isOnlySystem ? Names.SYSTEM_WRITE : Names.WRITE;
         try {
@@ -627,14 +627,7 @@ public class TransportBulkAction extends HandledTransportAction<BulkRequest, Bul
                 if (task != null) {
                     bulkShardRequest.setParentTask(nodeId, task.getId());
                 }
-                // Add the shard level accounting for coordinating and supply the listener
-                final boolean isOnlySystem = isOnlySystem(bulkRequest, clusterService.state().metadata().getIndicesLookup(), systemIndices);
-                final Releasable releasable = indexingPressureService.markCoordinatingOperationStarted(
-                    shardId,
-                    bulkShardRequest.ramBytesUsed(),
-                    isOnlySystem
-                );
-                shardBulkAction.execute(bulkShardRequest, ActionListener.runBefore(new ActionListener<BulkShardResponse>() {
+                shardBulkAction.execute(bulkShardRequest, new ActionListener<BulkShardResponse>() {
                     @Override
                     public void onResponse(BulkShardResponse bulkShardResponse) {
                         for (BulkItemResponse bulkItemResponse : bulkShardResponse.getResponses()) {
@@ -674,7 +667,7 @@ public class TransportBulkAction extends HandledTransportAction<BulkRequest, Bul
                             new BulkResponse(responses.toArray(new BulkItemResponse[responses.length()]), buildTookInMillis(startTimeNanos))
                         );
                     }
-                }, releasable::close));
+                });
             }
             bulkRequest = null; // allow memory for bulk request items to be reclaimed before all items have been completed
         }

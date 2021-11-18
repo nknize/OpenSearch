@@ -32,6 +32,7 @@
 
 package org.opensearch.node;
 
+import org.opensearch.index.IndexingPressure;
 import org.opensearch.core.internal.io.IOUtils;
 import org.opensearch.Build;
 import org.opensearch.Version;
@@ -45,7 +46,6 @@ import org.opensearch.common.settings.Settings;
 import org.opensearch.common.settings.SettingsFilter;
 import org.opensearch.discovery.Discovery;
 import org.opensearch.http.HttpServerTransport;
-import org.opensearch.index.IndexingPressureService;
 import org.opensearch.indices.IndicesService;
 import org.opensearch.indices.breaker.CircuitBreakerService;
 import org.opensearch.ingest.IngestService;
@@ -74,7 +74,7 @@ public class NodeService implements Closeable {
     private final HttpServerTransport httpServerTransport;
     private final ResponseCollectorService responseCollectorService;
     private final SearchTransportService searchTransportService;
-    private final IndexingPressureService indexingPressureService;
+    private final IndexingPressure indexingPressure;
     private final AggregationUsageService aggregationUsageService;
 
     private final Discovery discovery;
@@ -95,7 +95,7 @@ public class NodeService implements Closeable {
         SettingsFilter settingsFilter,
         ResponseCollectorService responseCollectorService,
         SearchTransportService searchTransportService,
-        IndexingPressureService indexingPressureService,
+        IndexingPressure indexingPressure,
         AggregationUsageService aggregationUsageService
     ) {
         this.settings = settings;
@@ -112,7 +112,7 @@ public class NodeService implements Closeable {
         this.scriptService = scriptService;
         this.responseCollectorService = responseCollectorService;
         this.searchTransportService = searchTransportService;
-        this.indexingPressureService = indexingPressureService;
+        this.indexingPressure = indexingPressure;
         this.aggregationUsageService = aggregationUsageService;
         clusterService.addStateApplier(ingestService);
     }
@@ -163,8 +163,7 @@ public class NodeService implements Closeable {
         boolean ingest,
         boolean adaptiveSelection,
         boolean scriptCache,
-        boolean indexingPressure,
-        boolean shardIndexingPressure
+        boolean indexingPressure
     ) {
         // for indices stats we want to include previous allocated shards stats as well (it will
         // only be applied to the sensible ones to use, like refresh/merge/flush/indexing stats)
@@ -185,8 +184,7 @@ public class NodeService implements Closeable {
             ingest ? ingestService.stats() : null,
             adaptiveSelection ? responseCollectorService.getAdaptiveStats(searchTransportService.getPendingSearchRequests()) : null,
             scriptCache ? scriptService.cacheStats() : null,
-            indexingPressure ? this.indexingPressureService.nodeStats() : null,
-            shardIndexingPressure ? this.indexingPressureService.shardStats(indices) : null
+            indexingPressure ? this.indexingPressure.stats() : null
         );
     }
 

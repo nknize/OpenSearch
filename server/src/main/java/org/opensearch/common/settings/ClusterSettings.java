@@ -33,12 +33,6 @@ package org.opensearch.common.settings;
 
 import org.apache.logging.log4j.LogManager;
 import org.opensearch.action.main.TransportMainAction;
-import org.opensearch.index.IndexModule;
-import org.opensearch.index.IndexSettings;
-import org.opensearch.index.IndexingPressure;
-import org.opensearch.index.ShardIndexingPressureMemoryManager;
-import org.opensearch.index.ShardIndexingPressureSettings;
-import org.opensearch.index.ShardIndexingPressureStore;
 import org.opensearch.watcher.ResourceWatcherService;
 import org.opensearch.action.admin.cluster.configuration.TransportAddVotingConfigExclusionsAction;
 import org.opensearch.action.admin.indices.close.TransportCloseIndexAction;
@@ -106,6 +100,9 @@ import org.opensearch.gateway.DanglingIndicesState;
 import org.opensearch.gateway.GatewayService;
 import org.opensearch.gateway.PersistedClusterStateService;
 import org.opensearch.http.HttpTransportSettings;
+import org.opensearch.index.IndexModule;
+import org.opensearch.index.IndexSettings;
+import org.opensearch.index.IndexingPressure;
 import org.opensearch.indices.IndexingMemoryController;
 import org.opensearch.indices.IndicesQueryCache;
 import org.opensearch.indices.IndicesRequestCache;
@@ -585,19 +582,7 @@ public final class ClusterSettings extends AbstractScopedSettings {
                 FsHealthService.REFRESH_INTERVAL_SETTING,
                 FsHealthService.SLOW_PATH_LOGGING_THRESHOLD_SETTING,
                 TransportMainAction.OVERRIDE_MAIN_RESPONSE_VERSION,
-                IndexingPressure.MAX_INDEXING_BYTES,
-                ShardIndexingPressureSettings.SHARD_INDEXING_PRESSURE_ENABLED,
-                ShardIndexingPressureSettings.SHARD_INDEXING_PRESSURE_ENFORCED,
-                ShardIndexingPressureSettings.REQUEST_SIZE_WINDOW,
-                ShardIndexingPressureSettings.SHARD_MIN_LIMIT,
-                ShardIndexingPressureStore.MAX_COLD_STORE_SIZE,
-                ShardIndexingPressureMemoryManager.LOWER_OPERATING_FACTOR,
-                ShardIndexingPressureMemoryManager.OPTIMAL_OPERATING_FACTOR,
-                ShardIndexingPressureMemoryManager.UPPER_OPERATING_FACTOR,
-                ShardIndexingPressureMemoryManager.NODE_SOFT_LIMIT,
-                ShardIndexingPressureMemoryManager.THROUGHPUT_DEGRADATION_LIMITS,
-                ShardIndexingPressureMemoryManager.SUCCESSFUL_REQUEST_ELAPSED_TIMEOUT,
-                ShardIndexingPressureMemoryManager.MAX_OUTSTANDING_REQUESTS
+                IndexingPressure.MAX_INDEXING_BYTES
             )
         )
     );
