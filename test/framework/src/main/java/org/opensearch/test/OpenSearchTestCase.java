@@ -94,14 +94,15 @@ import org.opensearch.common.util.MockPageCacheRecycler;
 import org.opensearch.common.util.concurrent.ThreadContext;
 import org.opensearch.common.util.set.Sets;
 import org.opensearch.common.xcontent.LoggingDeprecationHandler;
-import org.opensearch.common.xcontent.NamedXContentRegistry;
-import org.opensearch.common.xcontent.ToXContent;
-import org.opensearch.common.xcontent.XContent;
-import org.opensearch.common.xcontent.XContentBuilder;
+import org.opensearch.core.xcontent.MediaType;
+import org.opensearch.core.xcontent.NamedXContentRegistry;
+import org.opensearch.core.xcontent.ToXContent;
+import org.opensearch.core.xcontent.XContent;
+import org.opensearch.core.xcontent.XContentBuilder;
 import org.opensearch.common.xcontent.XContentFactory;
 import org.opensearch.common.xcontent.XContentHelper;
-import org.opensearch.common.xcontent.XContentParser;
-import org.opensearch.common.xcontent.XContentParser.Token;
+import org.opensearch.core.xcontent.XContentParser;
+import org.opensearch.core.xcontent.XContentParser.Token;
 import org.opensearch.common.xcontent.XContentType;
 import org.opensearch.env.Environment;
 import org.opensearch.env.NodeEnvironment;
@@ -1231,6 +1232,24 @@ public abstract class OpenSearchTestCase extends LuceneTestCase {
         public GeohashGenerator() {
             super(ASCII_SET);
         }
+    }
+
+    /**
+     * Returns the bytes that represent the XContent output of the provided {@link ToXContent} object, using the provided
+     * {@link XContentType}. Wraps the output into a new anonymous object according to the value returned
+     * by the {@link ToXContent#isFragment()} method returns. Shuffles the keys to make sure that parsing never relies on keys ordering.
+     */
+    protected final BytesReference toShuffledXContent(
+        ToXContent toXContent,
+        MediaType mediaType,
+        ToXContent.Params params,
+        boolean humanReadable,
+        String... exceptFieldNames
+    ) throws IOException {
+        if (mediaType instanceof XContentType == false) {
+            throw new IllegalArgumentException("Media type [" + mediaType.getClass().getName() + "] not supported");
+        }
+        return toShuffledXContent(toXContent, (XContentType) mediaType, params, humanReadable, exceptFieldNames);
     }
 
     /**

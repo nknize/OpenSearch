@@ -44,6 +44,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * CLI tool for checking jar hell
+ *
+ * @opensearch.internal
+ */
 public class JdkJarHellCheck {
 
     private Set<String> detected = new HashSet<>();

@@ -15,7 +15,7 @@ import org.opensearch.common.unit.ByteSizeValue;
 import org.opensearch.common.util.MovingAverage;
 import org.opensearch.monitor.jvm.JvmStats;
 import org.opensearch.search.backpressure.settings.SearchBackpressureSettings;
-import org.opensearch.common.xcontent.XContentBuilder;
+import org.opensearch.core.xcontent.XContentBuilder;
 import org.opensearch.tasks.Task;
 import org.opensearch.tasks.TaskCancellation;
 

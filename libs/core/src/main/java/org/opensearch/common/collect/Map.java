@@ -32,6 +32,13 @@
 
 package org.opensearch.common.collect;
 
+/**
+ * Base map type
+ *
+ * todo: deprecate w/ jdk upgrade?
+ *
+ * @opensearch.internal
+ */
 public class Map {
 
     /**

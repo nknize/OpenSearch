@@ -41,14 +41,15 @@ import com.fasterxml.jackson.core.json.JsonWriteContext;
 import com.fasterxml.jackson.core.util.DefaultIndenter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.core.util.JsonGeneratorDelegate;
-import org.opensearch.common.xcontent.DeprecationHandler;
-import org.opensearch.common.xcontent.NamedXContentRegistry;
-import org.opensearch.common.xcontent.XContent;
+import org.opensearch.core.xcontent.DeprecationHandler;
+import org.opensearch.core.xcontent.MediaType;
+import org.opensearch.core.xcontent.NamedXContentRegistry;
+import org.opensearch.core.xcontent.XContent;
 import org.opensearch.common.xcontent.XContentFactory;
-import org.opensearch.common.xcontent.XContentGenerator;
-import org.opensearch.common.xcontent.XContentParser;
+import org.opensearch.core.xcontent.XContentGenerator;
+import org.opensearch.core.xcontent.XContentParser;
 import org.opensearch.common.xcontent.XContentType;
-import org.opensearch.common.xcontent.support.filtering.FilterPathBasedFilter;
+import org.opensearch.core.xcontent.filtering.FilterPathBasedFilter;
 import org.opensearch.core.internal.io.Streams;
 
 import java.io.BufferedInputStream;
@@ -346,7 +347,7 @@ public class JsonXContentGenerator implements XContentGenerator {
     }
 
     @Override
-    public void writeRawField(String name, InputStream content, XContentType contentType) throws IOException {
+    public void writeRawField(String name, InputStream content, MediaType contentType) throws IOException {
         if (mayWriteRawData(contentType) == false) {
             // EMPTY is safe here because we never call namedObject when writing raw data
             try (
@@ -369,7 +370,7 @@ public class JsonXContentGenerator implements XContentGenerator {
     }
 
     @Override
-    public void writeRawValue(InputStream stream, XContentType xContentType) throws IOException {
+    public void writeRawValue(InputStream stream, MediaType xContentType) throws IOException {
         if (mayWriteRawData(xContentType) == false) {
             copyRawValue(stream, xContentType.xContent());
         } else {
@@ -383,7 +384,7 @@ public class JsonXContentGenerator implements XContentGenerator {
         }
     }
 
-    private boolean mayWriteRawData(XContentType contentType) {
+    private boolean mayWriteRawData(MediaType contentType) {
         // When the current generator is filtered (ie filter != null)
         // or the content is in a different format than the current generator,
         // we need to copy the whole structure so that it will be correctly

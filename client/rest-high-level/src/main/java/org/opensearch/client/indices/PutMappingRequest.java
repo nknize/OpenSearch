@@ -38,9 +38,10 @@ import org.opensearch.action.support.IndicesOptions;
 import org.opensearch.client.TimedRequest;
 import org.opensearch.common.bytes.BytesArray;
 import org.opensearch.common.bytes.BytesReference;
-import org.opensearch.common.xcontent.ToXContent;
-import org.opensearch.common.xcontent.ToXContentObject;
-import org.opensearch.common.xcontent.XContentBuilder;
+import org.opensearch.core.xcontent.MediaType;
+import org.opensearch.core.xcontent.ToXContent;
+import org.opensearch.core.xcontent.ToXContentObject;
+import org.opensearch.core.xcontent.XContentBuilder;
 import org.opensearch.common.xcontent.XContentFactory;
 import org.opensearch.common.xcontent.XContentType;
 
@@ -134,7 +135,11 @@ public class PutMappingRequest extends TimedRequest implements IndicesRequest, T
      */
     public PutMappingRequest source(XContentBuilder builder) {
         this.source = BytesReference.bytes(builder);
-        this.xContentType = builder.contentType();
+        MediaType mediaType = builder.contentType();
+        if (mediaType instanceof XContentType == false) {
+            throw new IllegalArgumentException("PutMappingRequest does not support media type [" + mediaType.getClass().getName() + "]");
+        }
+        this.xContentType = (XContentType) builder.contentType();
         return this;
     }
 

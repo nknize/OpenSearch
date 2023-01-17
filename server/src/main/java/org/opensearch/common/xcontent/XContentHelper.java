@@ -39,7 +39,15 @@ import org.opensearch.common.bytes.BytesReference;
 import org.opensearch.common.collect.Tuple;
 import org.opensearch.common.compress.Compressor;
 import org.opensearch.common.compress.CompressorFactory;
-import org.opensearch.common.xcontent.ToXContent.Params;
+import org.opensearch.core.xcontent.DeprecationHandler;
+import org.opensearch.core.xcontent.MediaType;
+import org.opensearch.core.xcontent.NamedXContentRegistry;
+import org.opensearch.core.xcontent.ToXContent;
+import org.opensearch.core.xcontent.ToXContent.Params;
+import org.opensearch.core.xcontent.XContent;
+import org.opensearch.core.xcontent.XContentBuilder;
+import org.opensearch.core.xcontent.XContentParseException;
+import org.opensearch.core.xcontent.XContentParser;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -61,7 +69,7 @@ public class XContentHelper {
 
     /**
      * Creates a parser based on the bytes provided
-     * @deprecated use {@link #createParser(NamedXContentRegistry, DeprecationHandler, BytesReference, XContentType)}
+     * @deprecated use {@link #createParser(NamedXContentRegistry, DeprecationHandler, BytesReference, MediaType)}
      * to avoid content type auto-detection
      */
     @Deprecated
@@ -96,9 +104,14 @@ public class XContentHelper {
         NamedXContentRegistry xContentRegistry,
         DeprecationHandler deprecationHandler,
         BytesReference bytes,
-        XContentType xContentType
+        MediaType mediaType
     ) throws IOException {
-        Objects.requireNonNull(xContentType);
+        if (mediaType instanceof XContentType == false) {
+            throw new IllegalArgumentException(
+                "Unable to create XContentParser: nvalid media type [" + mediaType.getClass().getName() + "]"
+            );
+        }
+        Objects.requireNonNull(mediaType);
         Compressor compressor = CompressorFactory.compressor(bytes);
         if (compressor != null) {
             InputStream compressedInput = null;
@@ -107,7 +120,7 @@ public class XContentHelper {
                 if (compressedInput.markSupported() == false) {
                     compressedInput = new BufferedInputStream(compressedInput);
                 }
-                return XContentFactory.xContent(xContentType).createParser(xContentRegistry, deprecationHandler, compressedInput);
+                return XContentFactory.xContent(mediaType).createParser(xContentRegistry, deprecationHandler, compressedInput);
             } catch (Exception e) {
                 if (compressedInput != null) compressedInput.close();
                 throw e;
@@ -115,10 +128,10 @@ public class XContentHelper {
         } else {
             if (bytes instanceof BytesArray) {
                 final BytesArray array = (BytesArray) bytes;
-                return xContentType.xContent()
+                return mediaType.xContent()
                     .createParser(xContentRegistry, deprecationHandler, array.array(), array.offset(), array.length());
             }
-            return xContentType.xContent().createParser(xContentRegistry, deprecationHandler, bytes.streamInput());
+            return mediaType.xContent().createParser(xContentRegistry, deprecationHandler, bytes.streamInput());
         }
     }
 
@@ -131,6 +144,18 @@ public class XContentHelper {
     public static Tuple<XContentType, Map<String, Object>> convertToMap(BytesReference bytes, boolean ordered)
         throws OpenSearchParseException {
         return convertToMap(bytes, ordered, null);
+    }
+
+    /**
+     * Converts the given bytes into a map that is optionally ordered. The provided {@link XContentType} must be non-null.
+     */
+    public static Tuple<XContentType, Map<String, Object>> convertToMap(BytesReference bytes, boolean ordered, MediaType mediaType) {
+        if (mediaType instanceof XContentType == false) {
+            throw new IllegalArgumentException(
+                "XContentHelper.convertToMap does not support media type [" + mediaType.getClass().getName() + "]"
+            );
+        }
+        return convertToMap(bytes, ordered, (XContentType) mediaType);
     }
 
     /**
@@ -435,7 +460,7 @@ public class XContentHelper {
 
     /**
      * Writes a "raw" (bytes) field, handling cases where the bytes are compressed, and tries to optimize writing using
-     * {@link XContentBuilder#rawField(String, InputStream, XContentType)}.
+     * {@link XContentBuilder#rawField(String, InputStream, MediaType)}.
      */
     public static void writeRawField(String field, BytesReference source, XContentType xContentType, XContentBuilder builder, Params params)
         throws IOException {

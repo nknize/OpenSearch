@@ -34,6 +34,13 @@ package org.opensearch.common.collect;
 
 import java.util.Collection;
 
+/**
+ * Base list type
+ *
+ * todo: deprecate w/ jdk upgrade?
+ *
+ * @opensearch.internal
+ */
 public class List {
 
     /**

@@ -42,13 +42,14 @@ import org.opensearch.common.Nullable;
 import org.opensearch.common.bytes.BytesArray;
 import org.opensearch.common.bytes.BytesReference;
 import org.opensearch.common.settings.Settings;
-import org.opensearch.common.xcontent.DeprecationHandler;
-import org.opensearch.common.xcontent.NamedXContentRegistry;
-import org.opensearch.common.xcontent.ToXContentFragment;
-import org.opensearch.common.xcontent.XContentBuilder;
+import org.opensearch.core.xcontent.DeprecationHandler;
+import org.opensearch.core.xcontent.MediaType;
+import org.opensearch.core.xcontent.NamedXContentRegistry;
+import org.opensearch.core.xcontent.ToXContentFragment;
+import org.opensearch.core.xcontent.XContentBuilder;
 import org.opensearch.common.xcontent.XContentFactory;
 import org.opensearch.common.xcontent.XContentHelper;
-import org.opensearch.common.xcontent.XContentParser;
+import org.opensearch.core.xcontent.XContentParser;
 import org.opensearch.common.xcontent.XContentType;
 import org.opensearch.common.xcontent.json.JsonXContent;
 import org.opensearch.common.xcontent.support.XContentMapValues;
@@ -270,7 +271,15 @@ public class PutIndexTemplateRequest extends ClusterManagerNodeRequest<PutIndexT
             builder.map(source);
             Objects.requireNonNull(builder.contentType());
             try {
-                mappings = new BytesArray(XContentHelper.convertToJson(BytesReference.bytes(builder), false, false, builder.contentType()));
+                MediaType mediaType = builder.contentType();
+                if (mediaType instanceof XContentType == false) {
+                    throw new IllegalArgumentException(
+                        "PutIndexTemplateRequest internalMapping does not support media type [" + mediaType.getClass().getName() + "]"
+                    );
+                }
+                mappings = new BytesArray(
+                    XContentHelper.convertToJson(BytesReference.bytes(builder), false, false, (XContentType) mediaType)
+                );
                 return this;
             } catch (IOException e) {
                 throw new UncheckedIOException("failed to convert source to json", e);
@@ -359,6 +368,18 @@ public class PutIndexTemplateRequest extends ClusterManagerNodeRequest<PutIndexT
      */
     public PutIndexTemplateRequest source(byte[] source, int offset, int length, XContentType xContentType) {
         return source(new BytesArray(source, offset, length), xContentType);
+    }
+
+    /**
+     * The template source definition.
+     */
+    public PutIndexTemplateRequest source(BytesReference source, MediaType mediaType) {
+        if (mediaType instanceof XContentType == false) {
+            throw new IllegalArgumentException(
+                "PutIndexTemplateRequest source does not support media type [" + mediaType.getClass().getName() + "]"
+            );
+        }
+        return source(source, (XContentType) mediaType);
     }
 
     /**

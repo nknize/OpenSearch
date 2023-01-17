@@ -42,20 +42,21 @@ import org.opensearch.action.admin.indices.mapping.put.PutMappingRequest;
 import org.opensearch.action.support.ActiveShardCount;
 import org.opensearch.action.support.IndicesOptions;
 import org.opensearch.action.support.master.AcknowledgedRequest;
-import org.opensearch.common.ParseField;
+import org.opensearch.core.ParseField;
 import org.opensearch.common.Strings;
 import org.opensearch.common.bytes.BytesArray;
 import org.opensearch.common.bytes.BytesReference;
 import org.opensearch.common.io.stream.StreamInput;
 import org.opensearch.common.io.stream.StreamOutput;
 import org.opensearch.common.settings.Settings;
-import org.opensearch.common.xcontent.DeprecationHandler;
+import org.opensearch.core.xcontent.DeprecationHandler;
 import org.opensearch.common.xcontent.LoggingDeprecationHandler;
-import org.opensearch.common.xcontent.NamedXContentRegistry;
-import org.opensearch.common.xcontent.XContentBuilder;
+import org.opensearch.core.xcontent.MediaType;
+import org.opensearch.core.xcontent.NamedXContentRegistry;
+import org.opensearch.core.xcontent.XContentBuilder;
 import org.opensearch.common.xcontent.XContentFactory;
 import org.opensearch.common.xcontent.XContentHelper;
-import org.opensearch.common.xcontent.XContentParser;
+import org.opensearch.core.xcontent.XContentParser;
 import org.opensearch.common.xcontent.XContentType;
 import org.opensearch.index.mapper.MapperService;
 
@@ -215,6 +216,14 @@ public class CreateIndexRequest extends AcknowledgedRequest<CreateIndexRequest> 
     }
 
     /**
+     * The settings to create the index with (using a generic MediaType)
+     */
+    private CreateIndexRequest settings(String source, MediaType mediaType) {
+        this.settings = Settings.builder().loadFromSource(source, mediaType).build();
+        return this;
+    }
+
+    /**
      * Allows to set the settings using a json builder.
      */
     public CreateIndexRequest settings(XContentBuilder builder) {
@@ -257,12 +266,35 @@ public class CreateIndexRequest extends AcknowledgedRequest<CreateIndexRequest> 
      * Adds mapping that will be added when the index gets created.
      *
      * @param source The mapping source
+     * @param mediaType The media type of the source
+     */
+    public CreateIndexRequest mapping(String source, MediaType mediaType) {
+        return mapping(new BytesArray(source), mediaType);
+    }
+
+    /**
+     * Adds mapping that will be added when the index gets created.
+     *
+     * @param source The mapping source
      * @param xContentType the content type of the mapping source
      */
     private CreateIndexRequest mapping(BytesReference source, XContentType xContentType) {
         Objects.requireNonNull(xContentType);
         Map<String, Object> mappingAsMap = XContentHelper.convertToMap(source, false, xContentType).v2();
         return mapping(MapperService.SINGLE_MAPPING_NAME, mappingAsMap);
+    }
+
+    /**
+     * Adds mapping that will be added when the index gets created.
+     *
+     * @param source The mapping source
+     * @param mediaType the media type of the mapping source
+     */
+    private CreateIndexRequest mapping(BytesReference source, MediaType mediaType) {
+        if (mediaType instanceof XContentType == false) {
+            throw new IllegalArgumentException("CreateIndexRequest does not support media type [" + mediaType.getClass().getName() + "]");
+        }
+        return mapping(source, (XContentType) mediaType);
     }
 
     /**
@@ -387,6 +419,13 @@ public class CreateIndexRequest extends AcknowledgedRequest<CreateIndexRequest> 
     /**
      * Sets the settings and mappings as a single source.
      */
+    public CreateIndexRequest source(String source, MediaType mediaType) {
+        return source(new BytesArray(source), mediaType);
+    }
+
+    /**
+     * Sets the settings and mappings as a single source.
+     */
     public CreateIndexRequest source(XContentBuilder source) {
         return source(BytesReference.bytes(source), source.contentType());
     }
@@ -412,6 +451,16 @@ public class CreateIndexRequest extends AcknowledgedRequest<CreateIndexRequest> 
         Objects.requireNonNull(xContentType);
         source(XContentHelper.convertToMap(source, false, xContentType).v2(), LoggingDeprecationHandler.INSTANCE);
         return this;
+    }
+
+    /**
+     * Sets the settings and mappings as a single source.
+     */
+    public CreateIndexRequest source(BytesReference source, MediaType mediaType) {
+        if (mediaType instanceof XContentType == false) {
+            throw new IllegalArgumentException("CreateIndexRequest does not support media type [" + mediaType.getClass().getName() + "]");
+        }
+        return source(source, (XContentType) mediaType);
     }
 
     /**

@@ -36,6 +36,11 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Base Time Unit Value
+ *
+ * @opensearch.internal
+ */
 public class TimeValue implements Comparable<TimeValue> {
 
     /** How many nano-seconds in one milli-second */

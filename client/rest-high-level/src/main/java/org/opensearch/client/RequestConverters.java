@@ -78,13 +78,13 @@ import org.opensearch.common.bytes.BytesReference;
 import org.opensearch.common.lucene.uid.Versions;
 import org.opensearch.common.unit.TimeValue;
 import org.opensearch.common.util.CollectionUtils;
-import org.opensearch.common.xcontent.DeprecationHandler;
-import org.opensearch.common.xcontent.NamedXContentRegistry;
-import org.opensearch.common.xcontent.ToXContent;
-import org.opensearch.common.xcontent.XContent;
-import org.opensearch.common.xcontent.XContentBuilder;
+import org.opensearch.core.xcontent.DeprecationHandler;
+import org.opensearch.core.xcontent.NamedXContentRegistry;
+import org.opensearch.core.xcontent.ToXContent;
+import org.opensearch.core.xcontent.XContent;
+import org.opensearch.core.xcontent.XContentBuilder;
 import org.opensearch.common.xcontent.XContentHelper;
-import org.opensearch.common.xcontent.XContentParser;
+import org.opensearch.core.xcontent.XContentParser;
 import org.opensearch.common.xcontent.XContentType;
 import org.opensearch.index.VersionType;
 import org.opensearch.index.mapper.MapperService;
@@ -514,7 +514,7 @@ final class RequestConverters {
         XContent xContent = REQUEST_BODY_CONTENT_TYPE.xContent();
         byte[] source = MultiSearchRequest.writeMultiLineFormat(multiSearchRequest, xContent);
         request.addParameters(params.asMap());
-        request.setEntity(new ByteArrayEntity(source, createContentType(xContent.type())));
+        request.setEntity(new ByteArrayEntity(source, createContentType((XContentType) xContent.type())));
         return request;
     }
 
@@ -549,7 +549,7 @@ final class RequestConverters {
 
         XContent xContent = REQUEST_BODY_CONTENT_TYPE.xContent();
         byte[] source = MultiSearchTemplateRequest.writeMultiLineFormat(multiSearchTemplateRequest, xContent);
-        request.setEntity(new ByteArrayEntity(source, createContentType(xContent.type())));
+        request.setEntity(new ByteArrayEntity(source, createContentType((XContentType) xContent.type())));
         return request;
     }
 

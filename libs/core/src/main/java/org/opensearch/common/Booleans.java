@@ -32,6 +32,11 @@
 
 package org.opensearch.common;
 
+/**
+ * Extended Boolean functionality
+ *
+ * @opensearch.internal
+ */
 public final class Booleans {
     private Booleans() {
         throw new AssertionError("No instances intended");
