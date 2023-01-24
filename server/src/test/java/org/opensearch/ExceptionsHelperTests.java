@@ -40,6 +40,7 @@ import org.opensearch.action.ShardOperationFailedException;
 import org.opensearch.action.search.ShardSearchFailure;
 import org.opensearch.cluster.metadata.IndexMetadata;
 import org.opensearch.common.ParsingException;
+import org.opensearch.common.lucene.Lucene;
 import org.opensearch.common.util.concurrent.OpenSearchRejectedExecutionException;
 import org.opensearch.index.Index;
 import org.opensearch.index.query.QueryShardException;
@@ -208,29 +209,29 @@ public class ExceptionsHelperTests extends OpenSearchTestCase {
 
     public void testUnwrapCorruption() {
         final Throwable corruptIndexException = new CorruptIndexException("corrupt", "resource");
-        assertThat(ExceptionsHelper.unwrapCorruption(corruptIndexException), equalTo(corruptIndexException));
+        assertThat(Lucene.unwrapIndexCorruptionException(corruptIndexException), equalTo(corruptIndexException));
 
         final Throwable corruptionAsCause = new RuntimeException(corruptIndexException);
-        assertThat(ExceptionsHelper.unwrapCorruption(corruptionAsCause), equalTo(corruptIndexException));
+        assertThat(Lucene.unwrapIndexCorruptionException(corruptionAsCause), equalTo(corruptIndexException));
 
         final Throwable corruptionSuppressed = new RuntimeException();
         corruptionSuppressed.addSuppressed(corruptIndexException);
-        assertThat(ExceptionsHelper.unwrapCorruption(corruptionSuppressed), equalTo(corruptIndexException));
+        assertThat(Lucene.unwrapIndexCorruptionException(corruptionSuppressed), equalTo(corruptIndexException));
 
         final Throwable corruptionSuppressedOnCause = new RuntimeException(new RuntimeException());
         corruptionSuppressedOnCause.getCause().addSuppressed(corruptIndexException);
-        assertThat(ExceptionsHelper.unwrapCorruption(corruptionSuppressedOnCause), equalTo(corruptIndexException));
+        assertThat(Lucene.unwrapIndexCorruptionException(corruptionSuppressedOnCause), equalTo(corruptIndexException));
 
         final Throwable corruptionCauseOnSuppressed = new RuntimeException();
         corruptionCauseOnSuppressed.addSuppressed(new RuntimeException(corruptIndexException));
-        assertThat(ExceptionsHelper.unwrapCorruption(corruptionCauseOnSuppressed), equalTo(corruptIndexException));
+        assertThat(Lucene.unwrapIndexCorruptionException(corruptionCauseOnSuppressed), equalTo(corruptIndexException));
 
-        assertThat(ExceptionsHelper.unwrapCorruption(new RuntimeException()), nullValue());
-        assertThat(ExceptionsHelper.unwrapCorruption(new RuntimeException(new RuntimeException())), nullValue());
+        assertThat(Lucene.unwrapIndexCorruptionException(new RuntimeException()), nullValue());
+        assertThat(Lucene.unwrapIndexCorruptionException(new RuntimeException(new RuntimeException())), nullValue());
 
         final Throwable withSuppressedException = new RuntimeException();
         withSuppressedException.addSuppressed(new RuntimeException());
-        assertThat(ExceptionsHelper.unwrapCorruption(withSuppressedException), nullValue());
+        assertThat(Lucene.unwrapIndexCorruptionException(withSuppressedException), nullValue());
     }
 
     public void testSuppressedCycle() {
@@ -238,16 +239,16 @@ public class ExceptionsHelperTests extends OpenSearchTestCase {
         RuntimeException e2 = new RuntimeException();
         e1.addSuppressed(e2);
         e2.addSuppressed(e1);
-        ExceptionsHelper.unwrapCorruption(e1);
+        Lucene.unwrapIndexCorruptionException(e1);
 
         final CorruptIndexException corruptIndexException = new CorruptIndexException("corrupt", "resource");
         RuntimeException e3 = new RuntimeException(corruptIndexException);
         e3.addSuppressed(e1);
-        assertThat(ExceptionsHelper.unwrapCorruption(e3), equalTo(corruptIndexException));
+        assertThat(Lucene.unwrapIndexCorruptionException(e3), equalTo(corruptIndexException));
 
         RuntimeException e4 = new RuntimeException(e1);
         e4.addSuppressed(corruptIndexException);
-        assertThat(ExceptionsHelper.unwrapCorruption(e4), equalTo(corruptIndexException));
+        assertThat(Lucene.unwrapIndexCorruptionException(e4), equalTo(corruptIndexException));
     }
 
     public void testCauseCycle() {
@@ -255,6 +256,6 @@ public class ExceptionsHelperTests extends OpenSearchTestCase {
         RuntimeException e2 = new RuntimeException(e1);
         e1.initCause(e2);
         ExceptionsHelper.unwrap(e1, IOException.class);
-        ExceptionsHelper.unwrapCorruption(e1);
+        Lucene.unwrapIndexCorruptionException(e1);
     }
 }

@@ -14,12 +14,12 @@ import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.store.IOContext;
 import org.apache.lucene.store.IndexInput;
 import org.apache.lucene.util.ArrayUtil;
-import org.opensearch.ExceptionsHelper;
 import org.opensearch.action.ActionListener;
 import org.opensearch.cluster.node.DiscoveryNode;
 import org.opensearch.common.bytes.BytesArray;
 import org.opensearch.common.bytes.BytesReference;
 import org.opensearch.common.lease.Releasable;
+import org.opensearch.common.lucene.Lucene;
 import org.opensearch.common.lucene.store.InputStreamIndexInput;
 import org.opensearch.common.util.CancellableThreads;
 import org.opensearch.core.internal.io.IOUtils;
@@ -168,7 +168,7 @@ public final class SegmentFileTransferHandler {
     }
 
     public void handleErrorOnSendFiles(Store store, Exception e, StoreFileMetadata[] mds) throws Exception {
-        final IOException corruptIndexException = ExceptionsHelper.unwrapCorruption(e);
+        final IOException corruptIndexException = Lucene.unwrapIndexCorruptionException(e);
         assert Transports.assertNotTransportThread(this + "[handle error on send/clean files]");
         if (corruptIndexException != null) {
             Exception localException = null;

@@ -64,6 +64,7 @@ import org.opensearch.common.bytes.BytesReference;
 import org.opensearch.common.concurrent.GatedCloseable;
 import org.opensearch.common.io.FileSystemUtils;
 import org.opensearch.common.lease.Releasable;
+import org.opensearch.common.lucene.Lucene;
 import org.opensearch.common.lucene.store.IndexOutputOutputStream;
 import org.opensearch.common.lucene.uid.Versions;
 import org.opensearch.common.settings.ClusterSettings;
@@ -574,7 +575,7 @@ public class LocalStorePeerRecoverySourceHandlerTests extends OpenSearchTestCase
         );
         latch.await();
         assertThat(sendFilesError.get(), instanceOf(IOException.class));
-        assertNotNull(ExceptionsHelper.unwrapCorruption(sendFilesError.get()));
+        assertNotNull(Lucene.unwrapIndexCorruptionException(sendFilesError.get()));
         failedEngine.get();
         assertTrue(failedEngine.get());
         // ensure all chunk requests have been completed; otherwise some files on the target are left open.
@@ -642,7 +643,7 @@ public class LocalStorePeerRecoverySourceHandlerTests extends OpenSearchTestCase
         PlainActionFuture<Void> sendFilesFuture = new PlainActionFuture<>();
         handler.sendFiles(store, metas.toArray(new StoreFileMetadata[0]), () -> 0, sendFilesFuture);
         Exception ex = expectThrows(Exception.class, sendFilesFuture::actionGet);
-        final IOException unwrappedCorruption = ExceptionsHelper.unwrapCorruption(ex);
+        final IOException unwrappedCorruption = Lucene.unwrapIndexCorruptionException(ex);
         if (throwCorruptedIndexException) {
             assertNotNull(unwrappedCorruption);
             assertEquals(ex.getMessage(), "[File corruption occurred on recovery but checksums are ok]");

@@ -126,6 +126,12 @@ public class Lucene {
 
     public static final TopDocs EMPTY_TOP_DOCS = new TopDocs(new TotalHits(0, TotalHits.Relation.EQUAL_TO), EMPTY_SCORE_DOCS);
 
+    private static final List<Class<? extends IOException>> INDEX_CORRUPTION_EXCEPTIONS = Arrays.asList(
+        CorruptIndexException.class,
+        IndexFormatTooOldException.class,
+        IndexFormatTooNewException.class
+    );
+
     private Lucene() {}
 
     /**
@@ -696,7 +702,7 @@ public class Lucene {
      * {@link IndexFormatTooOldException}, or {@link IndexFormatTooNewException} otherwise {@code false}.
      */
     public static boolean isCorruptionException(Throwable t) {
-        return ExceptionsHelper.unwrapCorruption(t) != null;
+        return unwrapIndexCorruptionException(t) != null;
     }
 
     /**
@@ -722,6 +728,23 @@ public class Lucene {
         }
         // hard fail - we can't get a SegmentReader
         throw new IllegalStateException("Can not extract segment reader from given index reader [" + reader + "]");
+    }
+
+    /**
+     * Looks at the given Throwable's and its cause(s) as well as any suppressed exceptions on the Throwable as well as its causes
+     * and returns the first corruption indicating exception (as defined by {@link #INDEX_CORRUPTION_EXCEPTIONS}) it finds.
+     * @param t Throwable
+     * @return Corruption indicating exception if one is found, otherwise {@code null}
+     */
+    public static IOException unwrapIndexCorruptionException(Throwable t) {
+        return t == null ? null : ExceptionsHelper.<IOException>unwrapCausesAndSuppressed(t, cause -> {
+            for (Class<?> clazz : INDEX_CORRUPTION_EXCEPTIONS) {
+                if (clazz.isInstance(cause)) {
+                    return true;
+                }
+            }
+            return false;
+        }).orElse(null);
     }
 
     @SuppressForbidden(reason = "Version#parseLeniently() used in a central place")

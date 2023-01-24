@@ -35,9 +35,6 @@ package org.opensearch;
 import com.fasterxml.jackson.core.JsonParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.IndexFormatTooNewException;
-import org.apache.lucene.index.IndexFormatTooOldException;
 import org.opensearch.action.ShardOperationFailedException;
 import org.opensearch.common.Nullable;
 import org.opensearch.common.compress.NotXContentException;
@@ -45,7 +42,6 @@ import org.opensearch.common.util.concurrent.OpenSearchRejectedExecutionExceptio
 import org.opensearch.index.Index;
 import org.opensearch.rest.RestStatus;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -215,32 +211,9 @@ public final class ExceptionsHelper {
         return first;
     }
 
-    private static final List<Class<? extends IOException>> CORRUPTION_EXCEPTIONS = Arrays.asList(
-        CorruptIndexException.class,
-        IndexFormatTooOldException.class,
-        IndexFormatTooNewException.class
-    );
-
-    /**
-     * Looks at the given Throwable's and its cause(s) as well as any suppressed exceptions on the Throwable as well as its causes
-     * and returns the first corruption indicating exception (as defined by {@link #CORRUPTION_EXCEPTIONS}) it finds.
-     * @param t Throwable
-     * @return Corruption indicating exception if one is found, otherwise {@code null}
-     */
-    public static IOException unwrapCorruption(Throwable t) {
-        return t == null ? null : ExceptionsHelper.<IOException>unwrapCausesAndSuppressed(t, cause -> {
-            for (Class<?> clazz : CORRUPTION_EXCEPTIONS) {
-                if (clazz.isInstance(cause)) {
-                    return true;
-                }
-            }
-            return false;
-        }).orElse(null);
-    }
-
     /**
      * Looks at the given Throwable and its cause(s) and returns the first Throwable that is of one of the given classes or {@code null}
-     * if no matching Throwable is found. Unlike {@link #unwrapCorruption} this method does only check the given Throwable and its causes
+     * if no matching Throwable is found. Unlike {@link org.opensearch.common.lucene.Lucene#unwrapIndexCorruptionException} this method does only check the given Throwable and its causes
      * but does not look at any suppressed exceptions.
      * @param t Throwable
      * @param clazzes Classes to look for
