@@ -58,6 +58,7 @@ import org.opensearch.common.settings.Settings;
 import org.opensearch.common.transport.BoundTransportAddress;
 import org.opensearch.core.internal.io.IOUtils;
 import org.opensearch.env.Environment;
+import org.opensearch.jdk.JarHell;
 import org.opensearch.monitor.jvm.JvmInfo;
 import org.opensearch.monitor.os.OsProbe;
 import org.opensearch.monitor.process.ProcessProbe;

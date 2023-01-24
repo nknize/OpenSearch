@@ -39,6 +39,7 @@ import org.opensearch.common.settings.Settings;
 import org.opensearch.common.util.FeatureFlags;
 import org.opensearch.env.Environment;
 import org.opensearch.http.HttpTransportSettings;
+import org.opensearch.jdk.JarHell;
 import org.opensearch.plugins.PluginInfo;
 import org.opensearch.plugins.PluginsService;
 import org.opensearch.secure_sm.SecureSM;

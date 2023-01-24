@@ -45,7 +45,7 @@ import java.nio.file.Path;
 public class ThirdPartyAuditPrecommitPlugin extends PrecommitPlugin {
 
     public static final String JDK_JAR_HELL_CONFIG_NAME = "jdkJarHell";
-    public static final String LIBS_OPENSEARCH_CORE_PROJECT_PATH = ":libs:opensearch-core";
+    public static final String LIBS_OPENSEARCH_CORE_PROJECT_PATH = ":libs:opensearch-commons";
 
     @Override
     public TaskProvider<? extends Task> createTask(Project project) {
@@ -54,7 +54,7 @@ public class ThirdPartyAuditPrecommitPlugin extends PrecommitPlugin {
         project.getDependencies().add("forbiddenApisCliJar", "de.thetaphi:forbiddenapis:3.4");
 
         Configuration jdkJarHellConfig = project.getConfigurations().create(JDK_JAR_HELL_CONFIG_NAME);
-        if (BuildParams.isInternal() && project.getPath().equals(":libs:opensearch-core") == false) {
+        if (BuildParams.isInternal() && project.getPath().equals(":libs:opensearch-commons") == false) {
             // External plugins will depend on this already via transitive dependencies.
             // Internal projects are not all plugins, so make sure the check is available
             // we are not doing this for this project itself to avoid jar hell with itself

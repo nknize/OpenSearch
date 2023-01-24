@@ -41,7 +41,7 @@ import org.apache.tika.parser.Parser;
 import org.apache.tika.parser.ParserDecorator;
 import org.opensearch.SpecialPermission;
 import org.opensearch.bootstrap.FilePermissionUtils;
-import org.opensearch.bootstrap.JarHell;
+import org.opensearch.jdk.JarHell;
 import org.opensearch.common.SuppressForbidden;
 import org.opensearch.common.io.PathUtils;
 

@@ -30,7 +30,7 @@
  * GitHub history for details.
  */
 
-package org.opensearch.bootstrap;
+package org.opensearch.jdk;
 
 import org.opensearch.common.Strings;
 import org.opensearch.common.io.PathUtils;

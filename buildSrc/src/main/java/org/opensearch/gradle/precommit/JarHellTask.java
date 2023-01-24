@@ -57,7 +57,7 @@ public class JarHellTask extends PrecommitTask {
     public void runJarHellCheck() {
         LoggedExec.javaexec(getProject(), spec -> {
             spec.environment("CLASSPATH", getClasspath().getAsPath());
-            spec.getMainClass().set("org.opensearch.bootstrap.JarHell");
+            spec.getMainClass().set("org.opensearch.jdk.JarHell");
         });
     }
 

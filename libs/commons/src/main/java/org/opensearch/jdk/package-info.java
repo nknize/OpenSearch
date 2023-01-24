@@ -7,4 +7,4 @@
  */
 
 /** Bootstrap core library */
-package org.opensearch.bootstrap;
+package org.opensearch.jdk;

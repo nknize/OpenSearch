@@ -44,6 +44,7 @@ import org.opensearch.common.io.PathUtils;
 import org.opensearch.common.network.IfConfig;
 import org.opensearch.common.network.NetworkAddress;
 import org.opensearch.common.settings.Settings;
+import org.opensearch.jdk.JarHell;
 import org.opensearch.mockito.plugin.PriviledgedMockMaker;
 import org.opensearch.plugins.PluginInfo;
 import org.opensearch.secure_sm.SecureSM;

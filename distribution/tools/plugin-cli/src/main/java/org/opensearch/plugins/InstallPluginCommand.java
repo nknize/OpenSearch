@@ -50,7 +50,7 @@ import org.bouncycastle.openpgp.operator.jcajce.JcaKeyFingerprintCalculator;
 import org.bouncycastle.openpgp.operator.jcajce.JcaPGPContentVerifierBuilderProvider;
 import org.opensearch.Build;
 import org.opensearch.Version;
-import org.opensearch.bootstrap.JarHell;
+import org.opensearch.jdk.JarHell;
 import org.opensearch.cli.EnvironmentAwareCommand;
 import org.opensearch.cli.ExitCodes;
 import org.opensearch.cli.Terminal;
