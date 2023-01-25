@@ -50,7 +50,6 @@ import org.opensearch.core.xcontent.XContentBuilder;
 import org.opensearch.core.xcontent.XContentLocation;
 import org.opensearch.core.xcontent.XContentParser;
 
-
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.CharBuffer;
