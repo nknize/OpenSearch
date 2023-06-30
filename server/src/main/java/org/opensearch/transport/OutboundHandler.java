@@ -72,6 +72,7 @@ final class OutboundHandler {
     private final ThreadPool threadPool;
     private final BigArrays bigArrays;
     private volatile TransportMessageListener messageListener = TransportMessageListener.NOOP_LISTENER;
+    private volatile ProtobufTransportMessageListener protobufMessageListener = ProtobufTransportMessageListener.NOOP_LISTENER;
 
     OutboundHandler(
         String nodeName,
@@ -208,6 +209,14 @@ final class OutboundHandler {
     void setMessageListener(TransportMessageListener listener) {
         if (messageListener == TransportMessageListener.NOOP_LISTENER) {
             messageListener = listener;
+        } else {
+            throw new IllegalStateException("Cannot set message listener twice");
+        }
+    }
+
+    void setProtobufMessageListener(ProtobufTransportMessageListener listener) {
+        if (protobufMessageListener == ProtobufTransportMessageListener.NOOP_LISTENER) {
+            protobufMessageListener = listener;
         } else {
             throw new IllegalStateException("Cannot set message listener twice");
         }
