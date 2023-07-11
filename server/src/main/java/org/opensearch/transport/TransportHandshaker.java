@@ -43,6 +43,8 @@ import org.opensearch.common.unit.TimeValue;
 import org.opensearch.core.transport.TransportResponse;
 import org.opensearch.threadpool.ThreadPool;
 
+import com.google.protobuf.CodedInputStream;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -186,6 +188,18 @@ final class TransportHandshaker {
         @Override
         public String executor() {
             return ThreadPool.Names.SAME;
+        }
+
+        @Override
+        public HandshakeResponse read(CodedInputStream in) throws IOException {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'read'");
+        }
+
+        @Override
+        public void handleExceptionProtobuf(ProtobufTransportException exp) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
         }
     }
 

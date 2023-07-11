@@ -71,7 +71,7 @@ public class InboundHandler {
     private final Transport.RequestHandlers requestHandlers;
 
     private volatile TransportMessageListener messageListener = TransportMessageListener.NOOP_LISTENER;
-    private volatile ProtobufTransportMessageListener protobufMessageListener = ProtobufTransportMessageListener.NOOP_LISTENER;
+    // private volatile ProtobufTransportMessageListener protobufMessageListener = ProtobufTransportMessageListener.NOOP_LISTENER;
 
     private volatile long slowLogThresholdMs = Long.MAX_VALUE;
 
@@ -101,13 +101,13 @@ public class InboundHandler {
         }
     }
 
-    void setProtobufMessageListener(ProtobufTransportMessageListener listener) {
-        if (protobufMessageListener == ProtobufTransportMessageListener.NOOP_LISTENER) {
-            protobufMessageListener = listener;
-        } else {
-            throw new IllegalStateException("Cannot set message listener twice");
-        }
-    }
+    // void setProtobufMessageListener(ProtobufTransportMessageListener listener) {
+    //     if (protobufMessageListener == ProtobufTransportMessageListener.NOOP_LISTENER) {
+    //         protobufMessageListener = listener;
+    //     } else {
+    //         throw new IllegalStateException("Cannot set message listener twice");
+    //     }
+    // }
 
     void setSlowLogThreshold(TimeValue slowLogThreshold) {
         this.slowLogThresholdMs = slowLogThreshold.getMillis();
@@ -139,6 +139,8 @@ public class InboundHandler {
             threadContext.setHeaders(header.getHeaders());
             threadContext.putTransient("_remote_address", remoteAddress);
             if (header.isRequest()) {
+                System.out.println("InboundHandler.messageReceived isRequest");
+                System.out.println("Header: " + header);
                 handleRequest(channel, header, message);
             } else {
                 // Responses do not support short circuiting currently

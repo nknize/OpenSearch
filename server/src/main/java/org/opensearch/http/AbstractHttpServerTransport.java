@@ -165,15 +165,15 @@ public abstract class AbstractHttpServerTransport extends AbstractLifecycleCompo
         }
         TransportAddress[] transportAddress = boundTransportAddress.boundAddresses();
         TransportAddress publishAddress = boundTransportAddress.publishAddress();
-        ProtobufTransportAddress[] protobufTransportAddresses = new ProtobufTransportAddress[transportAddress.length];
-        for (int i = 0; i < transportAddress.length; i++) {
-            protobufTransportAddresses[i] = new ProtobufTransportAddress(transportAddress[i].address());
-        }
-        ProtobufBoundTransportAddress protobufBoundTransportAddress = new ProtobufBoundTransportAddress(
-            protobufTransportAddresses,
-            new ProtobufTransportAddress(publishAddress.address())
-        );
-        return new ProtobufHttpInfo(protobufBoundTransportAddress, maxContentLength.getBytes());
+        // TransportAddress[] protobufTransportAddresses = new TransportAddress[transportAddress.length];
+        // for (int i = 0; i < transportAddress.length; i++) {
+        //     protobufTransportAddresses[i] = new TransportAddress(transportAddress[i].address());
+        // }
+        // ProtobufBoundTransportAddress protobufBoundTransportAddress = new ProtobufBoundTransportAddress(
+        //     protobufTransportAddresses,
+        //     new TransportAddress(publishAddress.address())
+        // );
+        return new ProtobufHttpInfo(boundTransportAddress, maxContentLength.getBytes());
     }
 
     @Override

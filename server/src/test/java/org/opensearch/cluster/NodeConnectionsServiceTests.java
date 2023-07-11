@@ -61,7 +61,7 @@ import org.opensearch.transport.ConnectTransportException;
 import org.opensearch.transport.ConnectionProfile;
 import org.opensearch.transport.ProtobufConnectionProfile;
 import org.opensearch.transport.ProtobufTransportMessageListener;
-import org.opensearch.transport.ProtobufTransportRequest;
+import org.opensearch.transport.TransportRequest;
 import org.opensearch.transport.ProtobufTransportStats;
 import org.opensearch.transport.Transport;
 import org.opensearch.transport.TransportException;
@@ -696,15 +696,15 @@ public class NodeConnectionsServiceTests extends OpenSearchTestCase {
         }
 
         @Override
-        public void setMessageListener(ProtobufTransportMessageListener listener) {}
+        public void setMessageListenerProtobuf(ProtobufTransportMessageListener listener) {}
 
         @Override
-        public ProtobufBoundTransportAddress boundProtobufAddress() {
+        public BoundTransportAddress boundProtobufAddress() {
             return null;
         }
 
         @Override
-        public Map<String, ProtobufBoundTransportAddress> profileProtobufBoundAddresses() {
+        public Map<String, BoundTransportAddress> profileProtobufBoundAddresses() {
             return null;
         }
 
@@ -732,7 +732,7 @@ public class NodeConnectionsServiceTests extends OpenSearchTestCase {
                     public void sendRequest(
                         long requestId,
                         String action,
-                        ProtobufTransportRequest request,
+                        TransportRequest request,
                         TransportRequestOptions options
                     ) throws TransportException {}
 

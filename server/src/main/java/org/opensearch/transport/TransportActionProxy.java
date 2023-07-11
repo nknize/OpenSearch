@@ -39,6 +39,8 @@ import org.opensearch.core.transport.TransportResponse;
 import org.opensearch.tasks.Task;
 import org.opensearch.threadpool.ThreadPool;
 
+import com.google.protobuf.CodedInputStream;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.function.Function;
@@ -129,6 +131,18 @@ public final class TransportActionProxy {
         @Override
         public String executor() {
             return ThreadPool.Names.SAME;
+        }
+
+        @Override
+        public T read(CodedInputStream in) throws IOException {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'read'");
+        }
+
+        @Override
+        public void handleExceptionProtobuf(ProtobufTransportException exp) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
         }
     }
 
