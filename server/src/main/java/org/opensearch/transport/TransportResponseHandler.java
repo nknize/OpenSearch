@@ -34,6 +34,7 @@ package org.opensearch.transport;
 
 import org.opensearch.common.io.stream.ProtobufWriteable;
 import org.opensearch.core.common.io.stream.StreamInput;
+import org.opensearch.common.io.stream.TryWriteable;
 import org.opensearch.core.common.io.stream.Writeable;
 import org.opensearch.core.transport.TransportResponse;
 
@@ -47,7 +48,7 @@ import java.util.function.Function;
  *
  * @opensearch.internal
  */
-public interface TransportResponseHandler<T extends TransportResponse> extends Writeable.Reader<T>, ProtobufWriteable.Reader<T> {
+public interface TransportResponseHandler<T extends TransportResponse> extends Writeable.Reader<T>, ProtobufWriteable.Reader<T>, TryWriteable.Reader<T> {
 
     void handleResponse(T response);
 
@@ -91,12 +92,18 @@ public interface TransportResponseHandler<T extends TransportResponse> extends W
                 // TODO Auto-generated method stub
                 throw new UnsupportedOperationException("Unimplemented method 'read'");
             }
+
+            @Override
+            public Q read(byte[] in) throws IOException {
+                // TODO Auto-generated method stub
+                throw new UnsupportedOperationException("Unimplemented method 'read'");
+            }
         };
     }
 
     default <Q extends TransportResponse> TransportResponseHandler<Q> wrapProtobuf(
         Function<Q, T> converter,
-        ProtobufWriteable.Reader<Q> reader
+        TryWriteable.Reader<Q> reader
     ) {
         final TransportResponseHandler<T> self = this;
         return new TransportResponseHandler<Q>() {
@@ -117,7 +124,8 @@ public interface TransportResponseHandler<T extends TransportResponse> extends W
 
             @Override
             public Q read(CodedInputStream in) throws IOException {
-                return reader.read(in);
+                // TODO Auto-generated method stub
+                throw new UnsupportedOperationException("Unimplemented method 'read'");
             }
 
             @Override
@@ -130,6 +138,11 @@ public interface TransportResponseHandler<T extends TransportResponse> extends W
             public void handleException(TransportException exp) {
                 // TODO Auto-generated method stub
                 throw new UnsupportedOperationException("Unimplemented method 'handleException'");
+            }
+
+            @Override
+            public Q read(byte[] in) throws IOException {
+                return reader.read(in);
             }
         };
     }

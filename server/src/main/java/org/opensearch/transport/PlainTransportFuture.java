@@ -139,4 +139,10 @@ public class PlainTransportFuture<V extends TransportResponse> extends BaseFutur
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
     }
+
+    @Override
+    public V read(byte[] in) throws IOException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'read'");
+    }
 }
