@@ -38,8 +38,6 @@ import org.opensearch.common.io.stream.TryWriteable;
 import org.opensearch.core.common.io.stream.Writeable;
 import org.opensearch.core.transport.TransportResponse;
 
-import com.google.protobuf.CodedInputStream;
-
 import java.io.IOException;
 import java.util.function.Function;
 
@@ -48,13 +46,11 @@ import java.util.function.Function;
  *
  * @opensearch.internal
  */
-public interface TransportResponseHandler<T extends TransportResponse> extends Writeable.Reader<T>, ProtobufWriteable.Reader<T>, TryWriteable.Reader<T> {
+public interface TransportResponseHandler<T extends TransportResponse> extends Writeable.Reader<T>, ProtobufWriteable.Reader<T> {
 
     void handleResponse(T response);
 
     void handleException(TransportException exp);
-
-    void handleExceptionProtobuf(ProtobufTransportException exp);
 
     String executor();
 
@@ -82,18 +78,6 @@ public interface TransportResponseHandler<T extends TransportResponse> extends W
             }
 
             @Override
-            public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-            }
-
-            @Override
-            public Q read(CodedInputStream in) throws IOException {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'read'");
-            }
-
-            @Override
             public Q read(byte[] in) throws IOException {
                 // TODO Auto-generated method stub
                 throw new UnsupportedOperationException("Unimplemented method 'read'");
@@ -113,19 +97,8 @@ public interface TransportResponseHandler<T extends TransportResponse> extends W
             }
 
             @Override
-            public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                self.handleExceptionProtobuf(exp);
-            }
-
-            @Override
             public String executor() {
                 return self.executor();
-            }
-
-            @Override
-            public Q read(CodedInputStream in) throws IOException {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'read'");
             }
 
             @Override

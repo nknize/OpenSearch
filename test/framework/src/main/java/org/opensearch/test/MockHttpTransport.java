@@ -40,8 +40,6 @@ import org.opensearch.core.common.transport.TransportAddress;
 import org.opensearch.http.HttpInfo;
 import org.opensearch.http.HttpServerTransport;
 import org.opensearch.http.HttpStats;
-import org.opensearch.http.ProtobufHttpInfo;
-import org.opensearch.http.ProtobufHttpStats;
 import org.opensearch.plugins.Plugin;
 
 /**
@@ -61,18 +59,9 @@ public class MockHttpTransport extends AbstractLifecycleComponent implements Htt
         new TransportAddress[] { DUMMY_TRANSPORT_ADDRESS },
         DUMMY_TRANSPORT_ADDRESS
     );
-    // private static final TransportAddress DUMMY_PROTOBUF_TRANSPORT_ADDRESS = new TransportAddress(
-    //     TransportAddress.META_ADDRESS,
-    //     0
-    // );
-    // private static final BoundTransportAddress DUMMY_PROTOBUF_BOUND_ADDRESS = new BoundTransportAddress(
-    //     new TransportAddress[] { DUMMY_PROTOBUF_TRANSPORT_ADDRESS },
-    //     DUMMY_PROTOBUF_TRANSPORT_ADDRESS
-    // );
+
     private static final HttpInfo DUMMY_HTTP_INFO = new HttpInfo(DUMMY_BOUND_ADDRESS, 0);
     private static final HttpStats DUMMY_HTTP_STATS = new HttpStats(0, 0);
-    private static final ProtobufHttpInfo DUMMY_PROTOBUF_HTTP_INFO = new ProtobufHttpInfo(DUMMY_BOUND_ADDRESS, 0);
-    private static final ProtobufHttpStats DUMMY_PROTOBUF_HTTP_STATS = new ProtobufHttpStats(0, 0);
 
     @Override
     protected void doStart() {}
@@ -98,13 +87,4 @@ public class MockHttpTransport extends AbstractLifecycleComponent implements Htt
         return DUMMY_HTTP_STATS;
     }
 
-    @Override
-    public ProtobufHttpInfo protobufInfo() {
-        return DUMMY_PROTOBUF_HTTP_INFO;
-    }
-
-    @Override
-    public ProtobufHttpStats protobufStats() {
-        return DUMMY_PROTOBUF_HTTP_STATS;
-    }
 }

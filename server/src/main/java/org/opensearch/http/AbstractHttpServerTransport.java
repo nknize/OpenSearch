@@ -158,32 +158,8 @@ public abstract class AbstractHttpServerTransport extends AbstractLifecycleCompo
     }
 
     @Override
-    public ProtobufHttpInfo protobufInfo() {
-        BoundTransportAddress boundTransportAddress = boundAddress();
-        if (boundTransportAddress == null) {
-            return null;
-        }
-        TransportAddress[] transportAddress = boundTransportAddress.boundAddresses();
-        TransportAddress publishAddress = boundTransportAddress.publishAddress();
-        // TransportAddress[] protobufTransportAddresses = new TransportAddress[transportAddress.length];
-        // for (int i = 0; i < transportAddress.length; i++) {
-        //     protobufTransportAddresses[i] = new TransportAddress(transportAddress[i].address());
-        // }
-        // ProtobufBoundTransportAddress protobufBoundTransportAddress = new ProtobufBoundTransportAddress(
-        //     protobufTransportAddresses,
-        //     new TransportAddress(publishAddress.address())
-        // );
-        return new ProtobufHttpInfo(boundTransportAddress, maxContentLength.getBytes());
-    }
-
-    @Override
     public HttpStats stats() {
         return new HttpStats(httpChannels.size(), totalChannelsAccepted.get());
-    }
-
-    @Override
-    public ProtobufHttpStats protobufStats() {
-        return new ProtobufHttpStats(httpChannels.size(), totalChannelsAccepted.get());
     }
 
     protected void bindServer() {
