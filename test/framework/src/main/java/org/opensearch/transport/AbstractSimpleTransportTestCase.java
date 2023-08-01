@@ -77,8 +77,6 @@ import org.opensearch.threadpool.TestThreadPool;
 import org.opensearch.threadpool.ThreadPool;
 import org.opensearch.transport.TransportResponse.Empty;
 
-import com.google.protobuf.CodedInputStream;
-
 import org.junit.After;
 import org.junit.Before;
 
@@ -331,16 +329,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
                 }
 
                 @Override
-                public StringMessageResponse read(CodedInputStream in) throws IOException {
+                public StringMessageResponse read(byte[] in) throws IOException {
                     // TODO Auto-generated method stub
                     throw new UnsupportedOperationException("Unimplemented method 'read'");
                 }
 
-                @Override
-                public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                    // TODO Auto-generated method stub
-                    throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-                }
             }
         );
 
@@ -379,16 +372,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
                 }
 
                 @Override
-                public StringMessageResponse read(CodedInputStream in) throws IOException {
+                public StringMessageResponse read(byte[] in) throws IOException {
                     // TODO Auto-generated method stub
                     throw new UnsupportedOperationException("Unimplemented method 'read'");
                 }
 
-                @Override
-                public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                    // TODO Auto-generated method stub
-                    throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-                }
             }
         );
 
@@ -448,15 +436,9 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
             }
 
             @Override
-            public StringMessageResponse read(CodedInputStream in) throws IOException {
+            public StringMessageResponse read(byte[] in) throws IOException {
                 // TODO Auto-generated method stub
                 throw new UnsupportedOperationException("Unimplemented method 'read'");
-            }
-
-            @Override
-            public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
             }
         };
         StringMessageRequest ping = new StringMessageRequest("ping");
@@ -519,16 +501,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
                 }
 
                 @Override
-                public StringMessageResponse read(CodedInputStream in) throws IOException {
+                public StringMessageResponse read(byte[] in) throws IOException {
                     // TODO Auto-generated method stub
                     throw new UnsupportedOperationException("Unimplemented method 'read'");
                 }
 
-                @Override
-                public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                    // TODO Auto-generated method stub
-                    throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-                }
             }
         );
         responseLatch.await();
@@ -714,16 +691,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
                     }
 
                     @Override
-                    public Empty read(CodedInputStream in) throws IOException {
+                    public Empty read(byte[] in) throws IOException {
                         // TODO Auto-generated method stub
                         throw new UnsupportedOperationException("Unimplemented method 'read'");
                     }
 
-                    @Override
-                    public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                        // TODO Auto-generated method stub
-                        throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-                    }
                 }
             );
 
@@ -788,16 +760,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
                     }
 
                     @Override
-                    public StringMessageResponse read(CodedInputStream in) throws IOException {
+                    public StringMessageResponse read(byte[] in) throws IOException {
                         // TODO Auto-generated method stub
                         throw new UnsupportedOperationException("Unimplemented method 'read'");
                     }
 
-                    @Override
-                    public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                        // TODO Auto-generated method stub
-                        throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-                    }
                 }
             );
 
@@ -847,16 +814,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
                 }
 
                 @Override
-                public StringMessageResponse read(CodedInputStream in) throws IOException {
+                public StringMessageResponse read(byte[] in) throws IOException {
                     // TODO Auto-generated method stub
                     throw new UnsupportedOperationException("Unimplemented method 'read'");
                 }
 
-                @Override
-                public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                    // TODO Auto-generated method stub
-                    throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-                }
             }
         );
 
@@ -1108,16 +1070,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
                 }
 
                 @Override
-                public StringMessageResponse read(CodedInputStream in) throws IOException {
+                public StringMessageResponse read(byte[] in) throws IOException {
                     // TODO Auto-generated method stub
                     throw new UnsupportedOperationException("Unimplemented method 'read'");
                 }
 
-                @Override
-                public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                    // TODO Auto-generated method stub
-                    throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-                }
             }
         );
 
@@ -1194,16 +1151,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
                 }
 
                 @Override
-                public StringMessageResponse read(CodedInputStream in) throws IOException {
+                public StringMessageResponse read(byte[] in) throws IOException {
                     // TODO Auto-generated method stub
                     throw new UnsupportedOperationException("Unimplemented method 'read'");
                 }
 
-                @Override
-                public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                    // TODO Auto-generated method stub
-                    throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-                }
             }
         );
 
@@ -1247,16 +1199,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
                     }
 
                     @Override
-                    public StringMessageResponse read(CodedInputStream in) throws IOException {
+                    public StringMessageResponse read(byte[] in) throws IOException {
                         // TODO Auto-generated method stub
                         throw new UnsupportedOperationException("Unimplemented method 'read'");
                     }
 
-                    @Override
-                    public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                        // TODO Auto-generated method stub
-                        throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-                    }
                 }
             );
 
@@ -1303,16 +1250,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
             }
 
             @Override
-            public StringMessageResponse read(CodedInputStream in) throws IOException {
+            public StringMessageResponse read(byte[] in) throws IOException {
                 // TODO Auto-generated method stub
                 throw new UnsupportedOperationException("Unimplemented method 'read'");
             }
 
-            @Override
-            public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-            }
         };
 
         serviceA.registerRequestHandler("internal:test", ThreadPool.Names.SAME, StringMessageRequest::new, handler);
@@ -1610,16 +1552,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
                 }
 
                 @Override
-                public Version0Response read(CodedInputStream in) throws IOException {
+                public Version0Response read(byte[] in) throws IOException {
                     // TODO Auto-generated method stub
                     throw new UnsupportedOperationException("Unimplemented method 'read'");
                 }
 
-                @Override
-                public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                    // TODO Auto-generated method stub
-                    throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-                }
             }
         ).txGet();
 
@@ -1673,16 +1610,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
                 }
 
                 @Override
-                public Version1Response read(CodedInputStream in) throws IOException {
+                public Version1Response read(byte[] in) throws IOException {
                     // TODO Auto-generated method stub
                     throw new UnsupportedOperationException("Unimplemented method 'read'");
                 }
 
-                @Override
-                public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                    // TODO Auto-generated method stub
-                    throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-                }
             }
         ).txGet();
 
@@ -1730,16 +1662,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
                 }
 
                 @Override
-                public Version1Response read(CodedInputStream in) throws IOException {
+                public Version1Response read(byte[] in) throws IOException {
                     // TODO Auto-generated method stub
                     throw new UnsupportedOperationException("Unimplemented method 'read'");
                 }
 
-                @Override
-                public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                    // TODO Auto-generated method stub
-                    throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-                }
             }
         ).txGet();
 
@@ -1784,16 +1711,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
                 }
 
                 @Override
-                public Version0Response read(CodedInputStream in) throws IOException {
+                public Version0Response read(byte[] in) throws IOException {
                     // TODO Auto-generated method stub
                     throw new UnsupportedOperationException("Unimplemented method 'read'");
                 }
 
-                @Override
-                public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                    // TODO Auto-generated method stub
-                    throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-                }
             }
         ).txGet();
 
@@ -1841,16 +1763,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
                 }
 
                 @Override
-                public StringMessageResponse read(CodedInputStream in) throws IOException {
+                public StringMessageResponse read(byte[] in) throws IOException {
                     // TODO Auto-generated method stub
                     throw new UnsupportedOperationException("Unimplemented method 'read'");
                 }
 
-                @Override
-                public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                    // TODO Auto-generated method stub
-                    throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-                }
             }
         );
 
@@ -1917,16 +1834,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
                 }
 
                 @Override
-                public StringMessageResponse read(CodedInputStream in) throws IOException {
+                public StringMessageResponse read(byte[] in) throws IOException {
                     // TODO Auto-generated method stub
                     throw new UnsupportedOperationException("Unimplemented method 'read'");
                 }
 
-                @Override
-                public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                    // TODO Auto-generated method stub
-                    throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-                }
             }
         );
 
@@ -1980,16 +1892,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
             }
 
             @Override
-            public TestResponse read(CodedInputStream in) throws IOException {
+            public TestResponse read(byte[] in) throws IOException {
                 // TODO Auto-generated method stub
                 throw new UnsupportedOperationException("Unimplemented method 'read'");
             }
 
-            @Override
-            public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-            }
         });
 
         if (!latch.await(10, TimeUnit.SECONDS)) {
@@ -2040,16 +1947,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
                         }
 
                         @Override
-                        public TestResponse read(CodedInputStream in) throws IOException {
+                        public TestResponse read(byte[] in) throws IOException {
                             // TODO Auto-generated method stub
                             throw new UnsupportedOperationException("Unimplemented method 'read'");
                         }
 
-                        @Override
-                        public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                            // TODO Auto-generated method stub
-                            throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-                        }
                     }
                 );
 
@@ -2087,16 +1989,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
                         }
 
                         @Override
-                        public TestResponse read(CodedInputStream in) throws IOException {
+                        public TestResponse read(byte[] in) throws IOException {
                             // TODO Auto-generated method stub
                             throw new UnsupportedOperationException("Unimplemented method 'read'");
                         }
 
-                        @Override
-                        public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                            // TODO Auto-generated method stub
-                            throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-                        }
                     }
                 );
 
@@ -2257,16 +2154,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
                             }
 
                             @Override
-                            public TestResponse read(CodedInputStream in) throws IOException {
+                            public TestResponse read(byte[] in) throws IOException {
                                 // TODO Auto-generated method stub
                                 throw new UnsupportedOperationException("Unimplemented method 'read'");
                             }
 
-                            @Override
-                            public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                                // TODO Auto-generated method stub
-                                throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-                            }
                         }
                     );
                 } else {
@@ -2331,16 +2223,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
             }
 
             @Override
-            public TestResponse read(CodedInputStream in) throws IOException {
+            public TestResponse read(byte[] in) throws IOException {
                 // TODO Auto-generated method stub
                 throw new UnsupportedOperationException("Unimplemented method 'read'");
             }
 
-            @Override
-            public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-            }
         }
 
         for (int i = 0; i < iters; i++) {
@@ -2678,16 +2565,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
             }
 
             @Override
-            public TransportResponse read(CodedInputStream in) throws IOException {
+            public TransportResponse read(byte[] in) throws IOException {
                 // TODO Auto-generated method stub
                 throw new UnsupportedOperationException("Unimplemented method 'read'");
             }
 
-            @Override
-            public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-            }
         };
 
         serviceB.sendRequest(nodeA, "internal:action", new TestRequest(randomFrom("fail", "pass")), transportResponseHandler);
@@ -2740,16 +2622,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
             }
 
             @Override
-            public TransportResponse read(CodedInputStream in) throws IOException {
+            public TransportResponse read(byte[] in) throws IOException {
                 // TODO Auto-generated method stub
                 throw new UnsupportedOperationException("Unimplemented method 'read'");
             }
 
-            @Override
-            public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-            }
         };
         ConnectionProfile.Builder builder = new ConnectionProfile.Builder();
         builder.addConnections(
@@ -2822,16 +2699,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
             }
 
             @Override
-            public TransportResponse read(CodedInputStream in) throws IOException {
+            public TransportResponse read(byte[] in) throws IOException {
                 // TODO Auto-generated method stub
                 throw new UnsupportedOperationException("Unimplemented method 'read'");
             }
 
-            @Override
-            public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-            }
         };
 
         ConnectionProfile.Builder builder = new ConnectionProfile.Builder();
@@ -2908,16 +2780,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
             }
 
             @Override
-            public TransportResponse read(CodedInputStream in) throws IOException {
+            public TransportResponse read(byte[] in) throws IOException {
                 // TODO Auto-generated method stub
                 throw new UnsupportedOperationException("Unimplemented method 'read'");
             }
 
-            @Override
-            public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-            }
         };
 
         TransportStats stats = serviceC.transport.getStats(); // nothing transmitted / read yet
@@ -3041,16 +2908,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
             }
 
             @Override
-            public TransportResponse read(CodedInputStream in) throws IOException {
+            public TransportResponse read(byte[] in) throws IOException {
                 // TODO Auto-generated method stub
                 throw new UnsupportedOperationException("Unimplemented method 'read'");
             }
 
-            @Override
-            public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-            }
         };
 
         TransportStats stats = serviceC.transport.getStats(); // nothing transmitted / read yet
@@ -3440,16 +3302,11 @@ public abstract class AbstractSimpleTransportTestCase extends OpenSearchTestCase
                     }
 
                     @Override
-                    public TransportResponse read(CodedInputStream in) throws IOException {
+                    public TransportResponse read(byte[] in) throws IOException {
                         // TODO Auto-generated method stub
                         throw new UnsupportedOperationException("Unimplemented method 'read'");
                     }
 
-                    @Override
-                    public void handleExceptionProtobuf(ProtobufTransportException exp) {
-                        // TODO Auto-generated method stub
-                        throw new UnsupportedOperationException("Unimplemented method 'handleExceptionProtobuf'");
-                    }
                 }
             );
             assertThat(te.get(), not(nullValue()));
