@@ -46,12 +46,12 @@ import org.opensearch.action.admin.cluster.node.stats.ProtobufTransportNodesStat
 import org.opensearch.action.admin.cluster.state.ProtobufClusterStateRequest;
 import org.opensearch.action.admin.cluster.state.ProtobufClusterStateResponse;
 import org.opensearch.core.common.bytes.BytesReference;
-import org.opensearch.common.bytes.ReleasableBytesReference;
 import org.opensearch.common.collect.Tuple;
 import org.opensearch.core.common.io.stream.ByteBufferStreamInput;
 import org.opensearch.core.common.io.stream.NamedWriteableAwareStreamInput;
 import org.opensearch.core.common.io.stream.NamedWriteableRegistry;
 import org.opensearch.core.common.io.stream.StreamInput;
+import org.opensearch.core.common.transport.TransportAddress;
 import org.opensearch.common.lease.Releasable;
 import org.opensearch.core.common.transport.TransportAddress;
 import org.opensearch.common.unit.TimeValue;
@@ -158,7 +158,10 @@ public class InboundHandler {
         ThreadContext threadContext = threadPool.getThreadContext();
         try (ThreadContext.StoredContext existing = threadContext.stashContext()) {
             // Place the context with the headers from the message
-            final Tuple<Map<String, String>, Map<String, Set<String>>> headers = new Tuple<Map<String,String>,Map<String,Set<String>>>(message.getRequestHeaders(), message.getResponseHandlers());
+            final Tuple<Map<String, String>, Map<String, Set<String>>> headers = new Tuple<Map<String, String>, Map<String, Set<String>>>(
+                message.getRequestHeaders(),
+                message.getResponseHandlers()
+            );
             threadContext.setHeaders(headers);
             threadContext.putTransient("_remote_address", remoteAddress);
             if (TransportStatus.isRequest(header.getStatus().byteAt(0))) {
@@ -171,7 +174,7 @@ public class InboundHandler {
                 );
                 if (handler != null) {
                     // if (handler.toString().contains("Protobuf")) {
-                        handleProtobufResponse(requestId, remoteAddress, message, handler);
+                    handleProtobufResponse(requestId, remoteAddress, message, handler);
                     // }
                 }
             }
@@ -250,7 +253,11 @@ public class InboundHandler {
         }
     }
 
-    private <T extends TransportRequest> void handleRequestProtobuf(TcpChannel channel, org.opensearch.server.proto.MessageProto.OutboundInboundMessage.Header header, ProtobufOutboundMessage message) throws IOException {
+    private <T extends TransportRequest> void handleRequestProtobuf(
+        TcpChannel channel,
+        org.opensearch.server.proto.MessageProto.OutboundInboundMessage.Header header,
+        ProtobufOutboundMessage message
+    ) throws IOException {
         OutboundInboundMessage receivedMessage = message.getMessage();
         final String action = receivedMessage.getAction();
         final long requestId = header.getRequestId();

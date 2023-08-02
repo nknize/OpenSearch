@@ -105,9 +105,7 @@ public class OutboundHandlerTests extends OpenSearchTestCase {
             } catch (IOException e) {
                 throw new AssertionError(e);
             }
-        }, (c, m) -> {
-            protobufMessage.set(m);
-        });
+        }, (c, m) -> { protobufMessage.set(m); });
     }
 
     @After
