@@ -33,8 +33,6 @@
 package org.opensearch.test;
 
 import org.opensearch.common.lifecycle.AbstractLifecycleComponent;
-import org.opensearch.common.transport.ProtobufBoundTransportAddress;
-import org.opensearch.common.transport.ProtobufTransportAddress;
 import org.opensearch.core.common.transport.BoundTransportAddress;
 import org.opensearch.core.common.transport.TransportAddress;
 import org.opensearch.http.HttpInfo;

@@ -46,8 +46,6 @@ import org.opensearch.common.settings.Settings;
 import org.opensearch.core.common.transport.BoundTransportAddress;
 import org.opensearch.common.transport.NetworkExceptionHelper;
 import org.opensearch.common.transport.PortsRange;
-import org.opensearch.common.transport.ProtobufBoundTransportAddress;
-import org.opensearch.common.transport.ProtobufTransportAddress;
 import org.opensearch.core.common.transport.TransportAddress;
 import org.opensearch.core.common.unit.ByteSizeValue;
 import org.opensearch.common.util.BigArrays;

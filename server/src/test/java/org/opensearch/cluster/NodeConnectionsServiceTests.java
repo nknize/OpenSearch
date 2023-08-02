@@ -50,8 +50,6 @@ import org.opensearch.common.lifecycle.LifecycleListener;
 import org.opensearch.common.settings.Settings;
 import org.opensearch.core.common.transport.BoundTransportAddress;
 import org.opensearch.core.common.transport.TransportAddress;
-import org.opensearch.core.common.transport.BoundTransportAddress;
-import org.opensearch.core.common.transport.TransportAddress;
 import org.opensearch.test.OpenSearchTestCase;
 import org.opensearch.test.MockLogAppender;
 import org.opensearch.test.junit.annotations.TestLogging;

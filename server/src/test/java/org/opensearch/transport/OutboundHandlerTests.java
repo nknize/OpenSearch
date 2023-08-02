@@ -50,8 +50,6 @@ import org.opensearch.common.util.PageCacheRecycler;
 import org.opensearch.common.util.concurrent.ThreadContext;
 import org.opensearch.common.util.io.Streams;
 import org.opensearch.core.transport.TransportResponse;
-import org.opensearch.example.proto.ExampleProtoRequest;
-import org.opensearch.example.proto.ExampleRequestProto.ExampleRequest;
 import org.opensearch.test.OpenSearchTestCase;
 import org.opensearch.threadpool.TestThreadPool;
 import org.opensearch.threadpool.ThreadPool;
