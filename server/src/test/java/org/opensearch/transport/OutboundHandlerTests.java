@@ -316,5 +316,4 @@ public class OutboundHandlerTests extends OpenSearchTestCase {
 
         assertEquals("header_value", header.getHeaders().v1().get("header"));
     }
-
 }
